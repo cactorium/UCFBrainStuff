@@ -3,25 +3,54 @@
 	<head>
 		<title>SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES SEIZURES  </title>
 		<script>
-var elapsedTime = 50;
+
+window.onresize = function() {
+    var canvas = document.getElementById('the-thing');
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientWidth;
+};
+
 window.onload = function() {
+    var elapsedTime = 500/10;
+    if (window.location.hash) {
+        var maybeRate = parseInt(window.location.hash.slice(1));
+        if (!isNaN(maybeRate)) {
+            elapsedTime = 500/maybeRate;
+        }
+    }
 	console.log('loaded!');
-	var bodyStyle = document.body.style;
+    var canvas = document.getElementById('the-thing');
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientWidth;
+
+    if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+    }
+
+    var ctx = canvas.getContext('2d');
+
 	var isWhite = false;
-	var magic = function() {
-		if (isWhite) {
-			bodyStyle.backgroundColor = 'black';
-			isWhite = false;
-		} else {
-			bodyStyle.backgroundColor = 'white';
-			isWhite = true;
-		}
-		window.setTimeout(magic, elapsedTime);
+    var ts = null;
+	var magic = function(timestamp) {
+        if (ts == null || ((timestamp - ts) > elapsedTime)) {
+            if (isWhite) {
+                ctx.fillStyle = 'rgb(0,0,0)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                isWhite = false;
+            } else {
+                ctx.fillStyle = 'rgb(255,255,255)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                isWhite = true;
+            }
+            ts = timestamp;
+        }
+		window.requestAnimationFrame(magic);
 	};
-	magic();
+    window.requestAnimationFrame(magic);
 };
 </script>
 	</head>
 	<body>
+        <canvas id="the-thing"></canvas>
 	</body>
 </html>
