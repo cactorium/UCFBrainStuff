@@ -54,8 +54,8 @@ docs/_build/
 target/
 
 # CMake stuff
-**/CMakeCache.txt
-CMakeFiles/
-**/Makefile
+CMakeCache.txt
+CMakeFiles
+Makefile
 cmake_install.cmake
-examples/
+install_manifest.txt
