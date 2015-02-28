@@ -14,7 +14,7 @@ import matplotlib.animation as animation
 is_running = True
 # TODO: is_running is not working as expected. But it DOES work!
 
-def evt_main():
+def packets():
     global is_running
     ring_buf = np.zeros(x.size)
     headset = Emotiv()
@@ -25,13 +25,9 @@ def evt_main():
     try:
         while is_running:
             packet = headset.dequeue()
-            print packet.gyro_x, packet.gyro_y
-
-            ring_buf[pos] = packet.sensors["O2"]["value"]
-            pos = (pos + 1) % ring_buf.size
-            if pos % 4 == 0:
-                yield np.concatenate((ring_buf[pos:ring_buf.size:1], ring_buf[0:pos:1]))
-
+            data = {key: (value["value"], value["quality"])
+                    for (key, value) in packet.sensors.items()}
+            yield data
             gevent.sleep(0)
     except KeyboardInterrupt:
         headset.close()
@@ -39,33 +35,5 @@ def evt_main():
         is_running = False
         headset.close()
 
-x = np.arange(0, 4096)
-test_buf = np.zeros(x.size)
-
-fig, ax = plt.subplots()
-line, = ax.plot(x, test_buf)
-plt.axis([0, x.size - 1, -8192, 8191])
-
-def init():
-    line.set_ydata(np.ma.array(x, mask=True))
-    return line,
-
-def animate(rb):
-    dft = np.fft.fft(rb)
-    line.set_ydata(np.square(np.absolute(dft)))
-    return line,
-
-def counter():
-    global is_running
-    i = 0
-    while is_running:
-        yield i
-        i = i + 1
-
-ani = animation.FuncAnimation(fig, animate, evt_main, init_func=init, interval=20, blit=True)
-plt.show()
-is_running = False
-
-while True:
+def yield_helper():
     gevent.sleep(0)
-
