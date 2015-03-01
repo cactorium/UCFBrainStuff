@@ -36,6 +36,7 @@ typedef int eeg_mask_idx_t;
 
 #define EEG_O1      16
 #define EEG_O2      17
+#define EEG_MAX_CHANNELS 18
 
 /* A set of EEG channels. */
 struct eeg_mask_t {
@@ -56,7 +57,7 @@ void eeg_mask_remove_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
 void eeg_mask_toggle_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
 struct eeg_mask_itr eeg_mask_itr(struct eeg_mask_t* self);
 
-struct eeg_mask_idx_t eeg_mask_itr_next(struct eeg_mask_itr* itr);
+eeg_mask_idx_t eeg_mask_itr_next(struct eeg_mask_itr* itr);
 int eeg_mask_has_next(struct eeg_mask_itr* itr);
 const char* eeg_mask_idx_string(eeg_mask_idx_t idx);
 
@@ -142,7 +143,7 @@ struct eeg_stream_impl {
      * then returns a copy of the data.
      */
     eeg_err_t (*get_channel)(struct eeg_stream_t* self, 
-            const struct eeg_mask_t* m, eeg_val_t* c);
+            const struct eeg_mask_t* m, eeg_val_t* cm, eeg_time_t* ts);
 };
 
 /* Polymorphic wrappers around all streams! See eeg_stream_impl for API details.
@@ -158,6 +159,6 @@ eeg_err_t eeg_unmask_all_channels(struct eeg_stream_t *self);
 eeg_err_t eeg_mask_all_channels(struct eeg_stream_t *self);
 eeg_err_t eeg_get_frame(struct eeg_stream_t* self, struct eeg_frame_m_t* f);
 eeg_err_t eeg_get_channel(struct eeg_stream_t* self,
-        const struct eeg_mask_t* m, eeg_val_t* c);
+        const struct eeg_mask_t* m, eeg_val_t* c, eeg_time_t* ts);
 
 #endif
