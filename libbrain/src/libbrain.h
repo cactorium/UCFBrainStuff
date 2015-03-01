@@ -8,15 +8,59 @@
  * data from those sources. This should all be thread safe.
  */
 
-typedef unsigned long eeg_time_t;
+typedef int eeg_mask_idx_t;
 
-/* A single data point. */
-typedef float eeg_val;
+#define EEG_FZ      0
+#define EEG_FP1     1
+#define EEG_FP2     2
+#define EEG_F3      3
+#define EEG_F4      4
+#define EEG_F7      5
+#define EEG_F8      6
+
+#define EEG_CZ      7
+#define EEG_C3      8
+#define EEG_C4      9
+
+#define EEG_A1      10
+#define EEG_A2      11
+
+#define EEG_T3      12
+#define EEG_T4      13
+#define EEG_T5      14
+#define EEG_T6      15
+
+#define EEG_O1      16
+#define EEG_O2      17
 
 /* A set of EEG channels. */
 struct eeg_mask_t {
     unsigned char mask[3];
 };
+
+/* An iterator through all the EEG channels in a mask. */
+struct eeg_mask_itr {
+    struct eeg_mask_t* parent;
+    int cur_pos;
+};
+
+/* EEG mask functions. */
+struct eeg_mask_t eeg_mask_create();
+void eeg_mask_clone(const struct eeg_mask_t* src, struct eeg_mask_t* dst);
+void eeg_mask_add_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
+void eeg_mask_remove_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
+void eeg_mask_toggle_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
+struct eeg_mask_itr eeg_mask_itr(struct eeg_mask_t* self);
+
+const char* eeg_mask_idx_string(eeg_mask_idx_t idx);
+
+struct eeg_mask_idx_t eeg_mask_itr_next(struct eeg_mask_itr* itr);
+int eeg_mask_has_next(struct eeg_mask_itr* itr);
+
+typedef unsigned long eeg_time_t;
+
+/* A single data point. */
+typedef float eeg_val;
 
 /* A single frame of EEG data. It is unannotated, and thus the EEG electrodes
  * the data corresponds to is unknown. 
