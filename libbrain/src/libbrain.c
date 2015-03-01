@@ -15,6 +15,7 @@
         } \
     } while(0)
 
+
 eeg_err_t eeg_stream_destroy(struct eeg_stream_t* s) 
 {
     eeg_err_t ret = EEG_UNIMPL;
@@ -67,6 +68,20 @@ eeg_err_t eeg_unmask_all_channels(struct eeg_stream_t *self) {
 eeg_err_t eeg_mask_all_channels(struct eeg_stream_t *self) {
     eeg_err_t ret = EEG_UNIMPL;
     CHECK_IMPL_NOARGS (self, mask_all_channels, ret);
+    return ret;
+}
+
+eeg_err_t eeg_get_frame(struct eeg_stream_t* self, struct eeg_frame_m_t* f)
+{
+    eeg_err_t ret = EEG_UNIMPL;
+    CHECK_IMPL (self, get_frame, ret, f);
+    return ret;
+}
+eeg_err_t eeg_get_channel(struct eeg_stream_t* self,
+        const struct eeg_mask_t* m, eeg_val_t* c)
+{
+    eeg_err_t ret = EEG_UNIMPL;
+    CHECK_IMPL (self, get_channel, ret, m, c);
     return ret;
 }
 
