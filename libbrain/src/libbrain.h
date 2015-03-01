@@ -8,6 +8,10 @@
  * data from those sources. This should all be thread safe.
  */
 
+/* NOTE: Call before running any library functions. It's idempotent so repeated
+ * calls have no effect. */
+void eeg_init();
+
 typedef int eeg_mask_idx_t;
 
 #define EEG_FZ      0
@@ -52,21 +56,25 @@ void eeg_mask_remove_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
 void eeg_mask_toggle_idx(struct eeg_mask_t* self, eeg_mask_idx_t idx);
 struct eeg_mask_itr eeg_mask_itr(struct eeg_mask_t* self);
 
-const char* eeg_mask_idx_string(eeg_mask_idx_t idx);
-
 struct eeg_mask_idx_t eeg_mask_itr_next(struct eeg_mask_itr* itr);
 int eeg_mask_has_next(struct eeg_mask_itr* itr);
+const char* eeg_mask_idx_string(eeg_mask_idx_t idx);
 
 typedef unsigned long eeg_time_t;
 
+/* Returns the time in seconds since the start of the program. */
+double get_real_time(eeg_time_t t);
+double get_time_diff(eeg_time_t s, eeg_time_t e);
+eeg_time_t from_real_time(double t);
+
 /* A single data point. */
-typedef float eeg_val;
+typedef float eeg_val_t;
 
 /* A single frame of EEG data. It is unannotated, and thus the EEG electrodes
  * the data corresponds to is unknown. 
  */
 struct eeg_frame_t {
-    struct eeg_val_t* vals;
+    eeg_val_t* vals;
     eeg_time_t ts;
     unsigned int nvals;
 };
@@ -112,22 +120,29 @@ struct eeg_stream_impl {
     /* Start collecting data from the EEG helmet. */
     eeg_err_t (*try_connect)(struct eeg_stream_t* self);
     /* Suspend data collection. */
-    eeg_err_t (*disconnect)(struct eeg_stream_t *self);
+    eeg_err_t (*disconnect)(struct eeg_stream_t* self);
 
     /* Provide a list of channels this stream can provide. */
-    const struct eeg_mask_t* (*get_cap)(struct eeg_stream_t *self);
+    const struct eeg_mask_t* (*get_cap)(struct eeg_stream_t* self);
 
     /* Pick which channels this stream will provide. */
-    eeg_err_t (*mask_channels)(struct eeg_stream_t *self,
+    eeg_err_t (*mask_channels)(struct eeg_stream_t* self,
             const struct eeg_mask_t* cm);
     /* Provide active channels. */
-    const struct eeg_mask_t* (*get_active_channels)(struct eeg_stream_t *self);
+    const struct eeg_mask_t* (*get_active_channels)(struct eeg_stream_t* self);
     /* Hide all channels. */
-    eeg_err_t (*unmask_all_channels)(struct eeg_stream_t *self);
+    eeg_err_t (*unmask_all_channels)(struct eeg_stream_t* self);
     /* Show all channels. */
-    eeg_err_t (*mask_all_channels)(struct eeg_stream_t *self);
+    eeg_err_t (*mask_all_channels)(struct eeg_stream_t* self);
 
-    /* TODO: Add in stream reading/zero copy/signalling functions. */
+    /* Blocks until the stream receives a frame, then returns a copy of the data.
+     */
+    eeg_err_t (*get_frame)(struct eeg_stream_t* self, struct eeg_frame_m_t* f);
+    /* Blocks until the stream receives a frame with data in the right channel,
+     * then returns a copy of the data.
+     */
+    eeg_err_t (*get_channel)(struct eeg_stream_t* self, 
+            const struct eeg_mask_t* m, eeg_val_t* c);
 };
 
 /* Polymorphic wrappers around all streams! See eeg_stream_impl for API details.
