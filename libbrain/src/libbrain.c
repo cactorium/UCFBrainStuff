@@ -188,5 +188,3 @@ eeg_err_t eeg_get_channel(struct eeg_stream_t* self,
     CHECK_IMPL (self, get_channel, ret, m, c, ts);
     return ret;
 }
-
-
