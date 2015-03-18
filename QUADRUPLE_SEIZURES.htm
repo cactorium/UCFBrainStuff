@@ -1,0 +1,97 @@
+<!DOCTYPE html5>
+<html>
+	<head>
+		<title> QUADRUPLE SEIZURES BE AWARE!!! </title>
+		<h1> B.O.O.S.T. RVS Algorithm</h1>
+		
+		<button type="button" onclick="toggleRVS()">Toggle RVS</button>
+		<p id="debug"> RVS OFF. </p>
+		<script>
+		
+		var isClicked = false;
+		function toggleRVS()
+		{	
+			if (isClicked) { 
+				isClicked = false;
+				document.getElementById("debug").innerHTML = "RVS OFF";
+			}
+		   else { 
+		   		isClicked = true; 
+		   		document.getElementById("debug").innerHTML = "RVS ON";
+		   }
+		   
+		   window.onload()
+		}
+
+		window.onresize = function() {
+		    var canvas = document.getElementById('myCanvas');
+		    canvas.width = document.body.clientWidth;
+		    canvas.height = document.body.clientWidth;
+		};
+
+		window.onload = function() {
+		    var elapsedTime = 500/10;
+		    if (window.location.hash) {
+		        var maybeRate = parseInt(window.location.hash.slice(1));
+		        if (!isNaN(maybeRate)) {
+		            elapsedTime = 500/maybeRate;
+		        }
+		    }
+			console.log('loaded!');
+		    var canvas = document.getElementById('myCanvas');
+		    canvas.width = document.body.clientWidth;
+		    canvas.height = document.body.clientWidth;
+
+		    if (canvas.requestFullscreen) {
+		        canvas.requestFullscreen();
+		    }
+
+		    var ctx = canvas.getContext('2d');
+
+			var isWhite = false;
+			var ts = null;
+			var rectSize = 500;
+			var offsetX = 0;
+			var offsetY = 0;
+			
+			function magic(timestamp) 
+			{
+				RVS(0,0);
+		        RVS(rectSize + 300,0);
+				RVS(0,rectSize - 300);
+				RVS(0,0);
+				RVS(rectSize + 300, rectSize - 300);
+				
+				if (isClicked){
+					window.requestAnimationFrame(magic);
+				}
+				else{ document.getElementById("debug").innerHTML = "RVS OFF"}
+			};	
+			
+			function RVS(offsetX, offSetY, timestamp)
+			{
+				if (ts == null || ((timestamp - ts) > elapsedTime)){
+		            if (isWhite){
+		                ctx.fillStyle = 'rgb(0,0,0)';
+		                ctx.fillRect(offsetX, offsetY, rectSize, rectSize);
+		                isWhite = false;
+		            } else {
+						
+		                ctx.fillStyle = 'rgb(255,255,255)';
+		                ctx.fillRect(offsetX, offsetY, rectSize, rectSize);
+		                isWhite = true;
+		            }
+		            ts = timestamp;
+		        }
+			}		
+		    window.requestAnimationFrame(magic);
+		};
+		</script>
+
+
+		<noscript>Sorry, your browser does not support JavaScript!</noscript>
+	</head>
+	<body>
+        <canvas id="myCanvas"></canvas>
+	</body>
+</html>
