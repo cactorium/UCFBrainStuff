@@ -13,15 +13,37 @@ window.onresize = function() {
 window.onload = function() {
     var elapsedTime = [[1000/10, 1000/20], [1000/30, 1000/10]];
     if (window.location.hash) {
+        console.log(window.location.hash);
+        var rates = window.location.hash.slice(1).split(',');
         var maybeRate = parseInt(window.location.hash.slice(1));
-        if (!isNaN(maybeRate)) {
-            elapsedTime[0][0] = 500/maybeRate;
+        if (rates.length == 1 && !isNaN(maybeRate)) {
+            console.log('single input!');
+            for (var i = 0; i < elapsedTime.length; i++) {
+                for (var j = 0; j < elapsedTime[i].length; j++) {
+                    elapsedTime[i][j] = 500/maybeRate;
+                }
+            }
+        } else {
+            console.log(rates);
+            var count = 0;
+            for (var i = 0; i < elapsedTime.length && count < rates.length; i++) {
+                for (var j = 0; j < elapsedTime[i].length && count < rates.length; j++) {
+                    var maybeRate = null;
+                    while ((maybeRate == null || isNaN(maybeRate)) && count < rates.length) {
+                        maybeRate = parseInt(rates[count]);
+                        count++;
+                    }
+                    console.log(maybeRate);
+                    elapsedTime[i][j] = 500/maybeRate;
+                }
+            }
         }
+        console.log(elapsedTime);
     }
 	console.log('loaded!');
     var canvas = document.getElementById('the-thing');
     canvas.width = document.body.clientWidth;
-    canvas.height = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
 
     if (canvas.requestFullscreen) {
         canvas.requestFullscreen();
@@ -29,21 +51,31 @@ window.onload = function() {
 
     var ctx = canvas.getContext('2d');
 
-	var isWhite = [[false, false], [false, false]];
-    var ts = [[null, null], [null, null]];
+	var isWhite = [];
+    var ts = [];
+    for (var i = 0; i < elapsedTime.length; i++) {
+        var newRow = [], newTsRow = [];
+        for (var j = 0; j < elapsedTime[i].length; j++) {
+            newRow.push(false);
+            newTsRow.push(null);
+        }
+        isWhite.push(newRow);
+        ts.push(newTsRow);
+    }
+
 	var magic = function(timestamp) {
         for (var i = 0; i < isWhite.length; i++) {
             for (var j = 0; j < isWhite[i].length; j++) {
                 if (ts[i][j] == null || ((timestamp - ts[i][j]) > elapsedTime[i][j])) {
                     if (isWhite[i][j]) {
                         ctx.fillStyle = 'rgb(0,0,0)';
-                        ctx.fillRect(i*canvas.width/2, j*canvas.height/2, 
-                                canvas.width/2, canvas.height/2);
+                        ctx.fillRect(i*canvas.width/isWhite[i].length, j*canvas.height/isWhite.length, 
+                                canvas.width/isWhite[i].length, canvas.height/isWhite.length);
                         isWhite[i][j] = false;
                     } else {
                         ctx.fillStyle = 'rgb(255,255,255)';
-                        ctx.fillRect(i*canvas.width/2, j*canvas.height/2, 
-                                canvas.width/2, canvas.height/2);
+                        ctx.fillRect(i*canvas.width/isWhite[i].length, j*canvas.height/isWhite.length, 
+                                canvas.width/isWhite[i].length, canvas.height/isWhite.length);
                         isWhite[i][j] = true;
                     }
                     ts[i][j] = timestamp;
