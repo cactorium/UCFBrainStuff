@@ -11,11 +11,11 @@ window.onresize = function() {
 };
 
 window.onload = function() {
-    var elapsedTime = 500/10;
+    var elapsedTime = [[1000/10, 1000/20], [1000/30, 1000/10]];
     if (window.location.hash) {
         var maybeRate = parseInt(window.location.hash.slice(1));
         if (!isNaN(maybeRate)) {
-            elapsedTime = 500/maybeRate;
+            elapsedTime[0][0] = 500/maybeRate;
         }
     }
 	console.log('loaded!');
@@ -29,20 +29,26 @@ window.onload = function() {
 
     var ctx = canvas.getContext('2d');
 
-	var isWhite = false;
-    var ts = null;
+	var isWhite = [[false, false], [false, false]];
+    var ts = [[null, null], [null, null]];
 	var magic = function(timestamp) {
-        if (ts == null || ((timestamp - ts) > elapsedTime)) {
-            if (isWhite) {
-                ctx.fillStyle = 'rgb(0,0,0)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                isWhite = false;
-            } else {
-                ctx.fillStyle = 'rgb(255,255,255)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                isWhite = true;
+        for (var i = 0; i < isWhite.length; i++) {
+            for (var j = 0; j < isWhite[i].length; j++) {
+                if (ts[i][j] == null || ((timestamp - ts[i][j]) > elapsedTime[i][j])) {
+                    if (isWhite[i][j]) {
+                        ctx.fillStyle = 'rgb(0,0,0)';
+                        ctx.fillRect(i*canvas.width/2, j*canvas.height/2, 
+                                canvas.width/2, canvas.height/2);
+                        isWhite[i][j] = false;
+                    } else {
+                        ctx.fillStyle = 'rgb(255,255,255)';
+                        ctx.fillRect(i*canvas.width/2, j*canvas.height/2, 
+                                canvas.width/2, canvas.height/2);
+                        isWhite[i][j] = true;
+                    }
+                    ts[i][j] = timestamp;
+                }
             }
-            ts = timestamp;
         }
 		window.requestAnimationFrame(magic);
 	};
