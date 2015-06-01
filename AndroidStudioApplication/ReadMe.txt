@@ -1,3 +1,1 @@
-Introduction Build for SMART Power Chair Remote
-
-Master Database Password: smart
+Repository Maintained at: https://github.com/rafyarvelo/PowerChair_Remote
