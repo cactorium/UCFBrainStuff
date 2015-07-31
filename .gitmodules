@@ -1,3 +1,3 @@
 [submodule "emokit"]
-	path = emokit
+	path = old/emokit
 	url = https://github.com/openyou/emokit
