@@ -1,0 +1,122 @@
+Cmp-Mod V01 Created by Cvpcb (2015-04-07 BZR 5582)-product   date = Wed 22 Apr 2015 01:44:07 PM EDT
+
+BeginCmp
+TimeStamp = /55382206;
+Reference = C1;
+ValeurCmp = 10u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55382179;
+Reference = C2;
+ValeurCmp = 0.1u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55379930;
+Reference = IC1;
+ValeurCmp = ATTINY24-SS;
+IdModule  = Housings_SOIC:SOIC-14_3.9x8.7mm_Pitch1.27mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537C856;
+Reference = P1;
+ValeurCmp = PROG_PINS;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x06;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537A0D3;
+Reference = P2;
+ValeurCmp = GPIO;
+IdModule  = Wire_Pads:SolderWirePad_4xInline_1-2mmDrill;
+EndCmp
+
+BeginCmp
+TimeStamp = /553803F0;
+Reference = P3;
+ValeurCmp = OUT;
+IdModule  = Wire_Pads:SolderWirePad_4xInline_2mmDrill;
+EndCmp
+
+BeginCmp
+TimeStamp = /55380003;
+Reference = Q1;
+ValeurCmp = BC847S;
+IdModule  = custom_footprints:SOT-363;
+EndCmp
+
+BeginCmp
+TimeStamp = /5538008D;
+Reference = Q2;
+ValeurCmp = BC847S;
+IdModule  = custom_footprints:SOT-363;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537B59C;
+Reference = R1;
+ValeurCmp = 0;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55381214;
+Reference = R2;
+ValeurCmp = 0;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537B349;
+Reference = R3;
+ValeurCmp = 90;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537BF69;
+Reference = R4;
+ValeurCmp = 90;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /553812FA;
+Reference = R5;
+ValeurCmp = 0;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5538127C;
+Reference = R6;
+ValeurCmp = 0;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537BF03;
+Reference = R7;
+ValeurCmp = 90;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537BFC1;
+Reference = R8;
+ValeurCmp = 90;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537CCE6;
+Reference = R9;
+ValeurCmp = 33k;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+EndListe

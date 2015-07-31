@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TM4C123GH6PM
+D TM4C1231C3PM, Tiva ARM 32bit CortexM4 Microcontroller, 80MHz, 256kB Flash, 32kB SRAM, 2k EEPROM, LQFP64
+K ARM Tiva Cortex C MCU
+F http://www.ti.com/lit/ds/symlink/tm4c123gh6pm.pdf
+$ENDCMP
+#
+#End Doc Library

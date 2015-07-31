@@ -1,0 +1,129 @@
+Cmp-Mod V01 Created by Cvpcb (2015-04-07 BZR 5582)-product   date = Wed 22 Apr 2015 06:05:07 PM EDT
+
+BeginCmp
+TimeStamp = /553845FD;
+Reference = C1;
+ValeurCmp = 22u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55386108;
+Reference = C2;
+ValeurCmp = 47p;
+IdModule  = Capacitors_SMD:C_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /553861AD;
+Reference = C3;
+ValeurCmp = 47p;
+IdModule  = Capacitors_SMD:C_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /55385764;
+Reference = C4;
+ValeurCmp = 100n;
+IdModule  = Capacitors_SMD:C_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /55384C13;
+Reference = C5;
+ValeurCmp = 22u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5538404B;
+Reference = CON1;
+ValeurCmp = USB-MICRO-B;
+IdModule  = Connect:USB_Micro-B;
+EndCmp
+
+BeginCmp
+TimeStamp = /55384EAA;
+Reference = FB1;
+ValeurCmp = FERRITEBEAD;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /55389E05;
+Reference = P1;
+ValeurCmp = SERVO_PWMS;
+IdModule  = Wire_Pads:SolderWirePad_4xInline_1mmDrill;
+EndCmp
+
+BeginCmp
+TimeStamp = /55385B36;
+Reference = R1;
+ValeurCmp = 27;
+IdModule  = Resistors_SMD:R_1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55385B03;
+Reference = R2;
+ValeurCmp = 27;
+IdModule  = Resistors_SMD:R_1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55387053;
+Reference = R3;
+ValeurCmp = 10k;
+IdModule  = Resistors_SMD:R_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383BD6;
+Reference = U1;
+ValeurCmp = FT234XD;
+IdModule  = Housings_DFN_QFN:DFN-12-1EP_3x3mm_Pitch0.45mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383D86;
+Reference = U2;
+ValeurCmp = MSP430G2153;
+IdModule  = Sockets_DIP:DIP-20__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383F31;
+Reference = U3;
+ValeurCmp = ADP151AUJZ-3.3-R7;
+IdModule  = custom_footprints:TSOT-23;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383CD4;
+Reference = U4;
+ValeurCmp = SN74LV1T04;
+IdModule  = Transistors_SMD:sc70-5;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383D10;
+Reference = U5;
+ValeurCmp = SN74LV1T04;
+IdModule  = Transistors_SMD:sc70-5;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383D48;
+Reference = U6;
+ValeurCmp = SN74LV1T04;
+IdModule  = Transistors_SMD:sc70-5;
+EndCmp
+
+BeginCmp
+TimeStamp = /55383EB7;
+Reference = U7;
+ValeurCmp = SN74LV1T04;
+IdModule  = Transistors_SMD:sc70-5;
+EndCmp
+
+EndListe

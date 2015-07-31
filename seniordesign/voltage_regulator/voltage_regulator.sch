@@ -1,0 +1,298 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:special
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:custom-parts
+LIBS:voltage_regulator-cache
+EELAYER 25 0
+EELAYER END
+$Descr User 7874 4724
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L TPS62133 U1
+U 1 1 55363C02
+P 2550 1850
+F 0 "U1" H 2550 1850 60  0000 C CNN
+F 1 "TPS62133" H 2550 2500 60  0000 C CNN
+F 2 "Housings_DFN_QFN:QFN-16-1EP_3x3mm_Pitch0.5mm" H 2550 1850 60  0001 C CNN
+F 3 "" H 2550 1850 60  0000 C CNN
+	1    2550 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C2
+U 1 1 553652BE
+P 1450 1750
+F 0 "C2" H 1460 1820 50  0000 L CNN
+F 1 "0.1u" H 1460 1670 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 1450 1750 60  0001 C CNN
+F 3 "" H 1450 1750 60  0000 C CNN
+	1    1450 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C3
+U 1 1 55365359
+P 1700 1900
+F 0 "C3" H 1710 1970 50  0000 L CNN
+F 1 "3.3n" H 1710 1820 50  0000 L BNN
+F 2 "Capacitors_SMD:C_1206" H 1700 1900 60  0001 C CNN
+F 3 "" H 1700 1900 60  0000 C CNN
+	1    1700 1900
+	0    1    1    0   
+$EndComp
+$Comp
+L INDUCTOR_SMALL L1
+U 1 1 55365415
+P 3700 1200
+F 0 "L1" H 3700 1300 50  0000 C CNN
+F 1 "22u" H 3700 1150 50  0000 C CNN
+F 2 "custom_footprints:Coilcraft_XFL4020" H 3700 1200 60  0001 C CNN
+F 3 "" H 3700 1200 60  0000 C CNN
+	1    3700 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L USB J1
+U 1 1 5536550B
+P 5200 1000
+F 0 "J1" H 5150 1400 60  0000 C CNN
+F 1 "USB" V 4950 1150 60  0000 C CNN
+F 2 "Connect:USB_A" H 5200 1000 60  0001 C CNN
+F 3 "" H 5200 1000 60  0000 C CNN
+	1    5200 1000
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R1
+U 1 1 553655ED
+P 4150 1450
+F 0 "R1" V 4230 1450 50  0000 C CNN
+F 1 "100k" V 4150 1450 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603" V 4080 1450 30  0001 C CNN
+F 3 "" H 4150 1450 30  0000 C CNN
+	1    4150 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C1
+U 1 1 55365720
+P 1100 1650
+F 0 "C1" H 1110 1720 50  0000 L CNN
+F 1 "10u" H 1110 1570 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 1100 1650 60  0001 C CNN
+F 3 "" H 1100 1650 60  0000 C CNN
+	1    1100 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C4
+U 1 1 55365C06
+P 4400 1400
+F 0 "C4" H 4410 1470 50  0000 L CNN
+F 1 "22u" H 4410 1320 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 4400 1400 60  0001 C CNN
+F 3 "" H 4400 1400 60  0000 C CNN
+	1    4400 1400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3350 2750 3350 2100
+Wire Wire Line
+	3350 2100 3200 2100
+Wire Wire Line
+	3200 1900 4150 1900
+Wire Wire Line
+	4150 1900 4150 1600
+Wire Wire Line
+	3950 1200 4800 1200
+Wire Wire Line
+	4150 1200 4150 1300
+Wire Wire Line
+	3200 1200 3450 1200
+Wire Wire Line
+	3200 1300 3350 1300
+Wire Wire Line
+	3350 1200 3350 1400
+Connection ~ 3350 1200
+Wire Wire Line
+	3350 1400 3200 1400
+Connection ~ 3350 1300
+Wire Wire Line
+	4050 1200 4050 1600
+Wire Wire Line
+	4050 1600 3200 1600
+Connection ~ 4050 1200
+Wire Wire Line
+	4400 1200 4400 1300
+Connection ~ 4150 1200
+Wire Wire Line
+	2450 2600 2450 2900
+Wire Wire Line
+	2700 2600 2700 2750
+Wire Wire Line
+	2450 2750 3350 2750
+Connection ~ 2450 2750
+Wire Wire Line
+	2800 2750 2800 2600
+Connection ~ 2700 2750
+Wire Wire Line
+	1900 2100 1450 2100
+Wire Wire Line
+	1450 2100 1450 2450
+Wire Wire Line
+	1900 2300 1450 2300
+Connection ~ 1450 2300
+Wire Wire Line
+	1100 1150 1100 1550
+Wire Wire Line
+	1100 1200 1900 1200
+Wire Wire Line
+	1900 1300 1750 1300
+Wire Wire Line
+	1750 1200 1750 1700
+Connection ~ 1750 1200
+Wire Wire Line
+	1750 1500 1900 1500
+Connection ~ 1750 1300
+Wire Wire Line
+	4400 1500 4400 1600
+Wire Wire Line
+	4400 1600 4750 1600
+Wire Wire Line
+	4650 1600 4650 1650
+Wire Wire Line
+	4800 1450 4750 1450
+Wire Wire Line
+	4750 1600 4750 1350
+Connection ~ 4650 1600
+Wire Wire Line
+	5550 1450 5700 1450
+Wire Wire Line
+	5700 1450 5700 1500
+Connection ~ 4750 1450
+Wire Wire Line
+	4750 1350 4800 1350
+Connection ~ 4400 1200
+Connection ~ 2800 2750
+Wire Wire Line
+	1450 1650 1450 1200
+Connection ~ 1450 1200
+Connection ~ 1100 1200
+Wire Wire Line
+	1750 1700 1900 1700
+Connection ~ 1750 1500
+Wire Wire Line
+	1450 1850 1450 1900
+Wire Wire Line
+	1100 1900 1600 1900
+Wire Wire Line
+	1800 1900 1900 1900
+Wire Wire Line
+	1100 1750 1100 2100
+Connection ~ 1450 1900
+Connection ~ 1100 1900
+$Comp
+L +BATT #PWR01
+U 1 1 5537899D
+P 1100 1150
+F 0 "#PWR01" H 1100 1000 50  0001 C CNN
+F 1 "+BATT" H 1100 1290 50  0000 C CNN
+F 2 "Connect:1pin" H 1100 1150 60  0001 C CNN
+F 3 "" H 1100 1150 60  0000 C CNN
+	1    1100 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR02
+U 1 1 55378C9A
+P 1100 2100
+F 0 "#PWR02" H 1100 1850 50  0001 C CNN
+F 1 "GND" H 1100 1950 50  0000 C CNN
+F 2 "Connect:1pin" H 1100 2100 60  0001 C CNN
+F 3 "" H 1100 2100 60  0000 C CNN
+	1    1100 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR03
+U 1 1 55378DC0
+P 2450 2900
+F 0 "#PWR03" H 2450 2650 50  0001 C CNN
+F 1 "GND" H 2450 2750 50  0000 C CNN
+F 2 "" H 2450 2900 60  0000 C CNN
+F 3 "" H 2450 2900 60  0000 C CNN
+	1    2450 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR04
+U 1 1 55378E2A
+P 1450 2450
+F 0 "#PWR04" H 1450 2200 50  0001 C CNN
+F 1 "GND" H 1450 2300 50  0000 C CNN
+F 2 "" H 1450 2450 60  0000 C CNN
+F 3 "" H 1450 2450 60  0000 C CNN
+	1    1450 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR05
+U 1 1 55378FAD
+P 4650 1650
+F 0 "#PWR05" H 4650 1400 50  0001 C CNN
+F 1 "GND" H 4650 1500 50  0000 C CNN
+F 2 "" H 4650 1650 60  0000 C CNN
+F 3 "" H 4650 1650 60  0000 C CNN
+	1    4650 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR06
+U 1 1 55378FD1
+P 5700 1500
+F 0 "#PWR06" H 5700 1250 50  0001 C CNN
+F 1 "GND" H 5700 1350 50  0000 C CNN
+F 2 "" H 5700 1500 60  0000 C CNN
+F 3 "" H 5700 1500 60  0000 C CNN
+	1    5700 1500
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

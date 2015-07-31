@@ -1,0 +1,59 @@
+Cmp-Mod V01 Created by Cvpcb (2015-04-07 BZR 5582)-product   date = Wed 22 Apr 2015 08:15:47 AM EDT
+
+BeginCmp
+TimeStamp = /55365720;
+Reference = C1;
+ValeurCmp = 10u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /553652BE;
+Reference = C2;
+ValeurCmp = 0.1u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /55365359;
+Reference = C3;
+ValeurCmp = 3.3n;
+IdModule  = Capacitors_SMD:C_1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /55365C06;
+Reference = C4;
+ValeurCmp = 22u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5536550B;
+Reference = J1;
+ValeurCmp = USB;
+IdModule  = Connect:USB_A;
+EndCmp
+
+BeginCmp
+TimeStamp = /55365415;
+Reference = L1;
+ValeurCmp = 22u;
+IdModule  = custom_footprints:Coilcraft_XFL4020;
+EndCmp
+
+BeginCmp
+TimeStamp = /553655ED;
+Reference = R1;
+ValeurCmp = 100k;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /55363C02;
+Reference = U1;
+ValeurCmp = TPS62133;
+IdModule  = Housings_DFN_QFN:QFN-16-1EP_3x3mm_Pitch0.5mm;
+EndCmp
+
+EndListe

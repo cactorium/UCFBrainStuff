@@ -1,0 +1,47 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ADP151AUJZ-3.3-R7
+D Ultralow Noise, 200 mA, CMOS Linear Regulator, 3.3V
+K 3.3 V, Linear Regulator
+F http://www.mouser.com/ds/2/609/ADP151-259455.pdf
+$ENDCMP
+#
+$CMP BC847S
+D BC847S, 45V Vce, 0.2A Ic, Low noise, NPN, SOT-36
+K NPN Multi-chip General Purpose Amplifier
+F http://www.farnell.com/datasheets/1704965.pdf
+$ENDCMP
+#
+$CMP BC850
+D BC847S, 45V Vce, 0.2A Ic, Low noise, NPN, SC70-6
+K NPN Multi-chip General Purpose Amplifier
+F http://www.farnell.com/datasheets/1704965.pdf
+$ENDCMP
+#
+$CMP FT234XD
+D USB to Basic UART IC
+F http://www.ftdichip.com/Support/Documents/DataSheets/ICs/DS_FT234XD.pdf
+$ENDCMP
+#
+$CMP MSP430G2153
+D MSP430G2153 Mixed Signal Microcontroller
+F http://www.ti.com/lit/ds/symlink/msp430g2153.pdf
+$ENDCMP
+#
+$CMP SN74LV1T04
+D Single Power Supply Inverter Gate CMOS Logic Level Shifter 1.8-5 V
+F http://www.mouser.com/ds/2/405/scls738b-316938.pdf
+$ENDCMP
+#
+$CMP TM4C123GH6PM
+D TM4C1231C3PM, Tiva ARM 32bit CortexM4 Microcontroller, 80MHz, 256kB Flash, 32kB SRAM, 2k EEPROM, LQFP64
+K ARM Tiva Cortex C MCU
+F http://www.ti.com/lit/ds/symlink/tm4c123gh6pm.pdf
+$ENDCMP
+#
+$CMP TPS62133
+D 5 V, 3 A Buck Converter
+F http://www.ti.com/lit/ds/symlink/tps62132.pdf
+$ENDCMP
+#
+#End Doc Library
