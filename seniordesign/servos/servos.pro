@@ -1,6 +1,6 @@
-update=Thu 30 Jul 2015 10:46:49 PM EDT
+update=Thu 30 Jul 2015 11:12:46 PM EDT
 version=1
-last_client=eeschema
+last_client=cvpcb
 [pcbnew]
 version=1
 LastNetListRead=
@@ -20,9 +20,29 @@ SolderMaskMinWidth=0.000000000000
 DrawSegmentWidth=0.200000000000
 BoardOutlineThickness=0.100000000000
 ModuleOutlineThickness=0.150000000000
-[cvpcb]
-version=1
-NetIExt=net
+[pcbnew/libraries]
+LibName1=connect
+LibName2=connectors_molex_serial_53047-A123
+LibName3=dip_sockets
+LibName4=discret
+LibName5=display
+LibName6=divers
+LibName7=inductors
+LibName8=iut
+LibName9=led
+LibName10=libcms
+LibName11=muonde
+LibName12=pga_sockets
+LibName13=pin_array
+LibName14=powerint
+LibName15=smd_capacitors
+LibName16=smd_crystal&oscillator
+LibName17=smd_dil
+LibName18=smd_resistors
+LibName19=smd_transistors
+LibName20=sockets
+LibName21=valves
+LibDir=
 [general]
 version=1
 [schematic_editor]
@@ -79,3 +99,6 @@ LibName29=contrib
 LibName30=valves
 LibName31=/home/kelvin/docs/seniordesign/custom-parts
 LibName32=/home/kelvin/docs/seniordesign/FERRITEBEAD
+[cvpcb]
+version=1
+NetIExt=net
