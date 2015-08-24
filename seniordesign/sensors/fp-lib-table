@@ -1,3 +1,8 @@
 (fp_lib_table
   (lib (name custom_footprints)(type KiCad)(uri "$(KIPRJMOD)/../custom_footprints.pretty")(options "")(descr ""))
+  (lib (name Wire_Pads)(type KiCad)(uri "$(KIPRJMOD)/../kicad_lib/git/Wire_Pads.pretty")(options "")(descr ""))
+  (lib (name Resistors_SMD)(type KiCad)(uri "$(KIPRJMOD)/../kicad_lib/git/Resistors_SMD.pretty")(options "")(descr ""))
+  (lib (name Pin_Headers)(type KiCad)(uri "$(KIPRJMOD)/../kicad_lib/git/Pin_Headers.pretty")(options "")(descr ""))
+  (lib (name Housings_SOIC)(type KiCad)(uri "$(KIPRJMOD)/../kicad_lib/git/Housings_SOIC.pretty")(options "")(descr ""))
+  (lib (name Capacitors_SMD)(type KiCad)(uri "$(KIPRJMOD)/../kicad_lib/git/Capacitors_SMD.pretty")(options "")(descr ""))
 )

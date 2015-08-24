@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/kelvin/repos/UCFBrainStuff/seniordesign/sensors/sensors.sch)
-    (date "Sat Aug 22 16:06:38 2015")
+    (date "Sat Aug 22 16:51:17 2015")
     (tool "Eeschema (2015-07-31 BZR 6030)-product")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -192,6 +192,21 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 55397459)))
   (libparts
+    (libpart (lib device) (part BATTERY)
+      (fields
+        (field (name Reference) BT)
+        (field (name Value) BATTERY))
+      (pins
+        (pin (num 1) (name +) (type passive))
+        (pin (num 2) (name -) (type passive))))
+    (libpart (lib device) (part CRYSTAL_SMD)
+      (fields
+        (field (name Reference) X)
+        (field (name Value) CRYSTAL_SMD))
+      (pins
+        (pin (num 1) (name 1) (type passive))
+        (pin (num 2) (name 2) (type passive))
+        (pin (num 3) (name case) (type passive))))
     (libpart (lib device) (part R)
       (description Resistance)
       (footprints
@@ -206,14 +221,6 @@
       (pins
         (pin (num 1) (name ~) (type passive))
         (pin (num 2) (name ~) (type passive))))
-    (libpart (lib device) (part CRYSTAL_SMD)
-      (fields
-        (field (name Reference) X)
-        (field (name Value) CRYSTAL_SMD))
-      (pins
-        (pin (num 1) (name 1) (type passive))
-        (pin (num 2) (name 2) (type passive))
-        (pin (num 3) (name case) (type passive))))
     (libpart (lib sensors-cache) (part ADP151AUJZ-3.3-R7)
       (footprints
         (fp TSOT-23*))
@@ -450,19 +457,12 @@
         (pin (num 6) (name SHELL1) (type passive))
         (pin (num 7) (name SHELL2) (type passive))
         (pin (num 8) (name SHELL3) (type passive))
-        (pin (num 9) (name SHELL4) (type passive))))
-    (libpart (lib device) (part BATTERY)
-      (fields
-        (field (name Reference) BT)
-        (field (name Value) BATTERY))
-      (pins
-        (pin (num 1) (name +) (type passive))
-        (pin (num 2) (name -) (type passive)))))
+        (pin (num 9) (name SHELL4) (type passive)))))
   (libraries
-    (library (logical sensors-cache)
-      (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/sensors/sensors-cache.lib))
     (library (logical device)
-      (uri /usr/share/kicad/library/device.lib)))
+      (uri /usr/share/kicad/library/device.lib))
+    (library (logical sensors-cache)
+      (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/sensors/sensors-cache.lib)))
   (nets
     (net (code 1) (name "Net-(C6-Pad1)")
       (node (ref U2) (pin 38))
