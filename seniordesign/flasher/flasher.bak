@@ -75,7 +75,7 @@ U 1 1 5537A0D3
 P 5150 2150
 F 0 "P2" H 5150 2400 50  0000 C CNN
 F 1 "GPIO" V 5250 2150 50  0000 C CNN
-F 2 "Wire_Pads:SolderWirePad_4xInline_1-2mmDrill" H 5150 2150 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x04" H 5150 2150 60  0001 C CNN
 F 3 "" H 5150 2150 60  0000 C CNN
 	1    5150 2150
 	1    0    0    -1  
@@ -288,7 +288,7 @@ U 1 1 553803F0
 P 5200 3350
 F 0 "P3" H 5200 3600 50  0000 C CNN
 F 1 "OUT" V 5300 3350 50  0000 C CNN
-F 2 "Wire_Pads:SolderWirePad_4xInline_2mmDrill" H 5200 3350 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x04" H 5200 3350 60  0001 C CNN
 F 3 "" H 5200 3350 60  0000 C CNN
 	1    5200 3350
 	1    0    0    -1  
@@ -438,9 +438,9 @@ Wire Wire Line
 Wire Wire Line
 	4950 900  4450 900 
 Wire Wire Line
-	4450 1350 4450 900 
+	4450 900  4450 1350
 Wire Wire Line
-	3700 1350 4450 1350
+	4450 1350 3700 1350
 Wire Wire Line
 	3700 1450 4500 1450
 Wire Wire Line
@@ -471,7 +471,7 @@ Wire Bus Line
 Wire Bus Line
 	1000 2500 1000 5400
 Wire Bus Line
-	2900 5400 1000 5400
+	1000 5400 2900 5400
 Wire Bus Line
 	2900 3100 2900 3350
 Wire Wire Line
@@ -489,15 +489,15 @@ Wire Wire Line
 Wire Wire Line
 	3000 3350 3250 3350
 Wire Bus Line
-	2900 3050 2900 5400
+	2900 5400 2900 3050
 Wire Wire Line
 	3250 4700 3000 4700
 Wire Bus Line
 	1900 2600 4700 2600
 Wire Bus Line
-	4700 4000 4700 2600
+	4700 2600 4700 4000
 Wire Bus Line
-	1900 4000 4700 4000
+	4700 4000 1900 4000
 Wire Bus Line
 	1900 4000 1900 3950
 Wire Wire Line

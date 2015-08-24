@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/kelvin/repos/UCFBrainStuff/seniordesign/flasher/flasher.sch)
-    (date "Sat Aug 22 16:38:33 2015")
+    (date "Mon Aug 24 01:22:19 2015")
     (tool "Eeschema (2015-07-31 BZR 6030)-product")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -23,7 +23,7 @@
       (tstamp 55379930))
     (comp (ref P2)
       (value GPIO)
-      (footprint Wire_Pads:SolderWirePad_4xInline_1-2mmDrill)
+      (footprint Pin_Headers:Pin_Header_Straight_1x04)
       (libsource (lib flasher-cache) (part CONN_01X04))
       (sheetpath (names /) (tstamps /))
       (tstamp 5537A0D3))
@@ -83,7 +83,7 @@
       (tstamp 5538008D))
     (comp (ref P3)
       (value OUT)
-      (footprint Wire_Pads:SolderWirePad_4xInline_2mmDrill)
+      (footprint Pin_Headers:Pin_Header_Straight_1x04)
       (libsource (lib flasher-cache) (part CONN_01X04))
       (sheetpath (names /) (tstamps /))
       (tstamp 553803F0))
@@ -213,7 +213,7 @@
         (pin (num 2) (name ~) (type passive)))))
   (libraries
     (library (logical flasher-rescue)
-      (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/flasher/flasher-rescue.lib))
+      (uri flasher-rescue.lib))
     (library (logical atmel)
       (uri /usr/share/kicad/library/atmel.lib))
     (library (logical custom-parts)

@@ -53,7 +53,7 @@ U 1 1 553787AB
 P 1500 850
 F 0 "#PWR01" H 1500 700 50  0001 C CNN
 F 1 "+5V" H 1500 990 50  0000 C CNN
-F 2 "" H 1500 850 60  0000 C CNN
+F 2 "Wire_Pads:SolderWirePad_single_1-5mmDrill" H 1500 850 60  0001 C CNN
 F 3 "" H 1500 850 60  0000 C CNN
 	1    1500 850 
 	1    0    0    -1  
@@ -75,7 +75,7 @@ U 1 1 5537A0D3
 P 5150 2150
 F 0 "P2" H 5150 2400 50  0000 C CNN
 F 1 "GPIO" V 5250 2150 50  0000 C CNN
-F 2 "Wire_Pads:SolderWirePad_4xInline_1-2mmDrill" H 5150 2150 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x04" H 5150 2150 60  0001 C CNN
 F 3 "" H 5150 2150 60  0000 C CNN
 	1    5150 2150
 	1    0    0    -1  
@@ -288,7 +288,7 @@ U 1 1 553803F0
 P 5200 3350
 F 0 "P3" H 5200 3600 50  0000 C CNN
 F 1 "OUT" V 5300 3350 50  0000 C CNN
-F 2 "Wire_Pads:SolderWirePad_4xInline_2mmDrill" H 5200 3350 60  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x04" H 5200 3350 60  0001 C CNN
 F 3 "" H 5200 3350 60  0000 C CNN
 	1    5200 3350
 	1    0    0    -1  
@@ -576,7 +576,7 @@ U 1 1 55D8FA77
 P 1500 1300
 F 0 "#PWR011" H 1500 1300 30  0001 C CNN
 F 1 "GND" H 1500 1230 30  0001 C CNN
-F 2 "" H 1500 1300 60  0000 C CNN
+F 2 "Wire_Pads:SolderWirePad_single_1-5mmDrill" H 1500 1300 60  0001 C CNN
 F 3 "" H 1500 1300 60  0000 C CNN
 	1    1500 1300
 	1    0    0    -1  
