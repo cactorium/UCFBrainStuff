@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:voltage_regulator-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -46,17 +47,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L TPS62133 U1
-U 1 1 55363C02
-P 2550 1850
-F 0 "U1" H 2550 1850 60  0000 C CNN
-F 1 "TPS62133" H 2550 2500 60  0000 C CNN
-F 2 "Housings_DFN_QFN:QFN-16-1EP_3x3mm_Pitch0.5mm" H 2550 1850 60  0001 C CNN
-F 3 "" H 2550 1850 60  0000 C CNN
-	1    2550 1850
-	1    0    0    -1  
-$EndComp
-$Comp
 L C_Small C2
 U 1 1 553652BE
 P 1450 1750
@@ -101,7 +91,7 @@ F 3 "" H 5200 1000 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R1
+L R-RESCUE-voltage_regulator R1
 U 1 1 553655ED
 P 4150 1450
 F 0 "R1" V 4230 1450 50  0000 C CNN
@@ -241,7 +231,7 @@ F 3 "" H 1100 1150 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR02
+L GND-RESCUE-voltage_regulator #PWR02
 U 1 1 55378C9A
 P 1100 2100
 F 0 "#PWR02" H 1100 1850 50  0001 C CNN
@@ -252,7 +242,7 @@ F 3 "" H 1100 2100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR03
+L GND-RESCUE-voltage_regulator #PWR03
 U 1 1 55378DC0
 P 2450 2900
 F 0 "#PWR03" H 2450 2650 50  0001 C CNN
@@ -263,7 +253,7 @@ F 3 "" H 2450 2900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR04
+L GND-RESCUE-voltage_regulator #PWR04
 U 1 1 55378E2A
 P 1450 2450
 F 0 "#PWR04" H 1450 2200 50  0001 C CNN
@@ -274,7 +264,7 @@ F 3 "" H 1450 2450 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR05
+L GND-RESCUE-voltage_regulator #PWR05
 U 1 1 55378FAD
 P 4650 1650
 F 0 "#PWR05" H 4650 1400 50  0001 C CNN
@@ -285,7 +275,7 @@ F 3 "" H 4650 1650 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR06
+L GND-RESCUE-voltage_regulator #PWR06
 U 1 1 55378FD1
 P 5700 1500
 F 0 "#PWR06" H 5700 1250 50  0001 C CNN
@@ -293,6 +283,17 @@ F 1 "GND" H 5700 1350 50  0000 C CNN
 F 2 "" H 5700 1500 60  0000 C CNN
 F 3 "" H 5700 1500 60  0000 C CNN
 	1    5700 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L TPS62133 U1
+U 1 1 55DAB52A
+P 2550 1850
+F 0 "U1" H 2550 1850 60  0000 C CNN
+F 1 "TPS62133" H 2550 2500 60  0000 C CNN
+F 2 "Housings_DFN_QFN:QFN-16-1EP_3x3mm_Pitch0.5mm" H 2550 1850 60  0001 C CNN
+F 3 "" H 2550 1850 60  0000 C CNN
+	1    2550 1850
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

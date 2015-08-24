@@ -1,4 +1,4 @@
-update=Sat Aug 22 15:25:15 2015
+update=Mon Aug 24 02:01:41 2015
 version=1
 last_client=kicad
 [pcbnew]
@@ -62,3 +62,4 @@ LibName30=valves
 LibName31=kicad_lib/tm4c123gh6pm
 LibName32=kicad_lib/con-molex
 LibName33=kicad_lib/seniordesign-cache
+LibName34=kicad_lib/custom-parts
