@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/kelvin/repos/UCFBrainStuff/seniordesign/servos/servos.sch)
-    (date "Mon Aug 24 01:51:12 2015")
+    (date "Mon Aug 24 15:33:44 2015")
     (tool "Eeschema (2015-07-31 BZR 6030)-product")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -226,19 +226,6 @@
         (pin (num 3) (name GND) (type power_in))
         (pin (num 4) (name Y) (type output))
         (pin (num 5) (name Vcc) (type power_in))))
-    (libpart (lib servos-cache) (part C_Small)
-      (footprints
-        (fp C?)
-        (fp C_????_*)
-        (fp C_????)
-        (fp SMD*_c)
-        (fp Capacitor*))
-      (fields
-        (field (name Reference) C)
-        (field (name Value) C_Small))
-      (pins
-        (pin (num 1) (name ~) (type passive))
-        (pin (num 2) (name ~) (type passive))))
     (libpart (lib servos-cache) (part CONN_01X04)
       (footprints
         (fp Pin_Header_Straight_1X04)
@@ -253,6 +240,19 @@
         (pin (num 2) (name P2) (type passive))
         (pin (num 3) (name P3) (type passive))
         (pin (num 4) (name P4) (type passive))))
+    (libpart (lib servos-cache) (part C_Small)
+      (footprints
+        (fp C?)
+        (fp C_????_*)
+        (fp C_????)
+        (fp SMD*_c)
+        (fp Capacitor*))
+      (fields
+        (field (name Reference) C)
+        (field (name Value) C_Small))
+      (pins
+        (pin (num 1) (name ~) (type passive))
+        (pin (num 2) (name ~) (type passive))))
     (libpart (lib servos-cache) (part USB-MINI-B)
       (aliases
         (alias USB-MICRO-B))
@@ -274,10 +274,10 @@
   (libraries
     (library (logical device)
       (uri /usr/share/kicad/library/device.lib))
-    (library (logical custom-parts)
-      (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/kicad_lib/custom-parts.lib))
     (library (logical FERRITEBEAD)
       (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/kicad_lib/FERRITEBEAD.lib))
+    (library (logical custom-parts)
+      (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/kicad_lib/custom-parts.lib))
     (library (logical servos-cache)
       (uri /home/kelvin/repos/UCFBrainStuff/seniordesign/servos/servos-cache.lib)))
   (nets
