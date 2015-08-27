@@ -1,0 +1,12 @@
+[root]
+name = "gimbalgen"
+version = "0.1.0"
+dependencies = [
+ "xml_writer 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "xml_writer"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
