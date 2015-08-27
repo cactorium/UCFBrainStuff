@@ -35,7 +35,7 @@ const rod_dia: f64 = 4.84;
 const tab_margin: f64 = 1.20;
 const axis_h: f64 = 10.00;
 
-const strut_tab_width: f64 = 8.00;
+const strut_tab_width: f64 = 14.00;
 
 const azi_r_inner: f64 = 0.5*base_width + r_margin;
 const azi_r_outer: f64 = azi_r_inner + flange_to_end + thickness;
@@ -424,6 +424,67 @@ fn write_azimuthal_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.end_elem().unwrap();
 }
 
+fn write_azimuthal_servo_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    assert!(strut_tab_width/2. > shaft_to_edge);
+    writer.begin_elem("path").unwrap();
+    cut_style(writer);
+    let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - thickness) + 
+        " L" + &f64str(offset.x + strut_tab_width) + "," + &f64str(offset.y - thickness) +
+        " L" + &f64str(offset.x + strut_tab_width) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge + flange_len) + "," +
+            &f64str(offset.y) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge + flange_len) + "," +
+            &f64str(offset.y + servo_thickness + 2.*tab_margin) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width - flange_len) + "," +
+            &f64str(offset.y + servo_thickness + 2.*tab_margin) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width - flange_len) + "," +
+            &f64str(offset.y) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width) + "," +
+            &f64str(offset.y) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width) + "," +
+            &f64str(offset.y + servo_thickness) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge) + "," +
+            &f64str(offset.y + servo_thickness) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge) + "," +
+            &f64str(offset.y) +
+        " Z";
+    writer.attr("d", &path).unwrap();
+    writer.end_elem().unwrap();
+}
+
+fn write_azimuthal_bearing_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    assert!(rod_dia/2. < servo_thickness/2. + thickness);
+    {
+        writer.begin_elem("path").unwrap();
+        cut_style(writer);
+        let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
+            " L" + &f64str(offset.x) + "," + &f64str(offset.y - thickness) +
+            " L" + &f64str(offset.x + strut_tab_width) + "," +
+                &f64str(offset.y - thickness) +
+            " L" + &f64str(offset.x + strut_tab_width) + "," + &f64str(offset.y) +
+            " L" + &f64str(offset.x + strut_tab_width + tab_margin) + "," +
+                &f64str(offset.y) +
+            " L" + &f64str(offset.x + strut_tab_width + tab_margin) + "," +
+                &f64str(offset.y + servo_thickness + thickness) +
+            " L" + &f64str(offset.x - tab_margin) + "," +
+                &f64str(offset.y + servo_thickness + thickness) +
+            " L" + &f64str(offset.x - tab_margin) + "," +
+                &f64str(offset.y) +
+            " Z";
+        writer.attr("d", &path).unwrap();
+        writer.end_elem().unwrap();
+    }
+    {
+        writer.begin_elem("circle").unwrap();
+        cut_style(writer);
+        writer.attr("cx", &f64str(offset.x + strut_tab_width/2.)).unwrap();
+        writer.attr("cy", &f64str(offset.y + servo_thickness/2.)).unwrap();
+        writer.attr("r", &f64str(rod_dia)).unwrap();
+        writer.end_elem().unwrap();
+    }
+}
+
 fn main() {
     println!("Running gimbal design generator!");
     let mut out = File::create("test.svg").unwrap();
@@ -435,9 +496,11 @@ fn main() {
         write_base_bearing(xmlout, pt(width * in_to_mm/2.0 - 20.0, base_height + 100.0));
         write_servo_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
         write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 300.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 50.0, base_height + 100.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 50.0, base_height + 100.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 50.0, base_height + 200.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 50.0, base_height + 200.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 60.0, base_height + 100.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, base_height + 100.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 60.0, base_height + 200.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, base_height + 200.0));
+        write_azimuthal_servo_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 150.0));
+        write_azimuthal_bearing_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 200.0));
     });
 }
