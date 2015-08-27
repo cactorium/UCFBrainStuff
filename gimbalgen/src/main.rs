@@ -40,6 +40,7 @@ const servo_body_width: f64 = 22.50;
 const shaft_to_edge: f64 = 5.50;
 const flange_to_end: f64 = 21.00;
 const flange_len: f64 = 5.00;
+const servo_thickness: f64 = 11.00;
 
 struct Point {
     x: f64,
@@ -154,18 +155,18 @@ fn write_base<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
 
             writer.begin_elem("rect").unwrap();
             cut_style(writer);
-            writer.attr("x", &f64str(offset.x + shaft_to_edge));
-            writer.attr("y", &f64str(offset.y + stick_to_bottom - 0.5*raised_dia - r_margin - thickness - bearing_tolerance - thickness));
-            writer.attr("width", &f64str(flange_len));
-            writer.attr("height", &f64str(thickness));
+            writer.attr("x", &f64str(offset.x + shaft_to_edge)).unwrap();
+            writer.attr("y", &f64str(offset.y + stick_to_bottom - 0.5*raised_dia - r_margin - thickness - bearing_tolerance - thickness)).unwrap();
+            writer.attr("width", &f64str(flange_len)).unwrap();
+            writer.attr("height", &f64str(thickness)).unwrap();
             writer.end_elem().unwrap();
 
             writer.begin_elem("rect").unwrap();
             cut_style(writer);
-            writer.attr("x", &f64str(offset.x + shaft_to_edge - servo_body_width - flange_len));
-            writer.attr("y", &f64str(offset.y + stick_to_bottom - 0.5*raised_dia - r_margin - thickness - bearing_tolerance - thickness));
-            writer.attr("width", &f64str(flange_len));
-            writer.attr("height", &f64str(thickness));
+            writer.attr("x", &f64str(offset.x + shaft_to_edge - servo_body_width - flange_len)).unwrap();
+            writer.attr("y", &f64str(offset.y + stick_to_bottom - 0.5*raised_dia - r_margin - thickness - bearing_tolerance - thickness)).unwrap();
+            writer.attr("width", &f64str(flange_len)).unwrap();
+            writer.attr("height", &f64str(thickness)).unwrap();
             writer.end_elem().unwrap();
         } else {
             path = path + " L" + &f64str(offset.x + shaft_to_edge + flange_len) + "," +
@@ -263,7 +264,36 @@ fn write_base_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.end_elem().unwrap();
 }
 
-fn motor_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+fn write_motor_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    writer.begin_elem("path").unwrap();
+    cut_style(writer);
+    let path = "M".to_string() + &f64str(offset.x) + "," +
+        &f64str(offset.y) +
+    " L" + &f64str(offset.x + servo_body_width) + "," +
+        &f64str(offset.y) +
+    " L" + &f64str(offset.x + servo_body_width) + "," +
+        &f64str(offset.y - servo_thickness - thickness) +
+    " L" + &f64str(offset.x + servo_body_width + flange_len) + "," +
+        &f64str(offset.y - servo_thickness - thickness) +
+    " L" + &f64str(offset.x + servo_body_width + flange_len) + "," +
+        &f64str(offset.y - servo_thickness) +
+    " L" + &f64str(offset.x + servo_body_width + flange_len + tab_margin) + "," +
+        &f64str(offset.y - servo_thickness) + 
+    " L" + &f64str(offset.x + servo_body_width + flange_len + tab_margin) + "," +
+        &f64str(offset.y + 2.0*tab_margin) +
+    " L" + &f64str(offset.x - flange_len - tab_margin) + "," +
+        &f64str(offset.y + 2.0*tab_margin) + 
+    " L" + &f64str(offset.x - flange_len - tab_margin) + "," +
+        &f64str(offset.y - servo_thickness) +
+    " L" + &f64str(offset.x - flange_len) + "," +
+        &f64str(offset.y - servo_thickness) +
+    " L" + &f64str(offset.x - flange_len) + "," +
+        &f64str(offset.y - servo_thickness - thickness) +
+    " L" + &f64str(offset.x) + "," +
+        &f64str(offset.y - servo_thickness - thickness) +
+    " Z";
+    writer.attr("d", &path).unwrap();
+    writer.end_elem().unwrap();
 }
 
 fn main() {
@@ -274,6 +304,7 @@ fn main() {
 
     write_root(&mut xml_out, |xmlout| {
         write_base(xmlout, pt(width * in_to_mm/2.0, base_height));
-        write_base_bearing(xmlout, pt(width * in_to_mm/2.0, base_height + 100.0));
+        write_base_bearing(xmlout, pt(width * in_to_mm/2.0 - 20.0, base_height + 100.0));
+        write_motor_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
     });
 }
