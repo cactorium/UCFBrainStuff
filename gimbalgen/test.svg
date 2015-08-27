@@ -1,2 +1,6 @@
-<?xml version="1.0" standalone="no"?>
-<svg width="8.000in" height="24.000in" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203.199 609.599"></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="8.000in" height="24.000in" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203.199 609.599">
+  <path stroke="red" fill="transparent" fill-opacity="0.0" stroke-width="0.001in" d="M40.694,77.810 L40.694,155.620 L162.504,155.620 L162.504,77.810 L112.099,77.810 L112.099,63.499 L107.099,63.499 L107.099,60.099 L112.099,60.099 L112.099,42.499 L79.599,42.499 L79.599,60.099 L84.599,60.099 L84.599,63.499 L79.599,63.499 L79.599,77.810 Z"></path>
+  <rect stroke="red" fill="transparent" fill-opacity="0.0" stroke-width="0.001in" x="97.879" y="77.999" width="7.439" height="73.200"></rect>
+  <circle stroke="red" fill="transparent" fill-opacity="0.0" stroke-width="0.001in" cx="101.599" cy="114.599" r="28.199"></circle>
+  <rect stroke="red" fill="transparent" fill-opacity="0.0" stroke-width="0.001in" x="97.879" y="152.199" width="7.439" height="3.399"></rect></svg>
