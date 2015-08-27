@@ -35,8 +35,10 @@ const rod_dia: f64 = 4.84;
 const tab_margin: f64 = 1.20;
 const axis_h: f64 = 10.00;
 
+const strut_tab_width: f64 = 8.00;
+
 const azi_r_inner: f64 = 0.5*base_width + r_margin;
-const azi_r_outer: f64 = azi_r_inner + 20.00;
+const azi_r_outer: f64 = azi_r_inner + flange_to_end + thickness;
 const azi_r_margin: f64 = 3.50;
 const azi_angle: f64 = 45.00;
 
@@ -343,6 +345,28 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         " A" + &f64str(r) + "," + &f64str(r) + ",0,0,1," +
             &f64str(offset.x + r * (PI - phi_rad).sin()) + "," +
             &f64str(offset.y - r + r * (PI - phi_rad).cos()) +
+        " L" + &f64str(offset.x + r * (PI - phi_rad).sin() + l2 * phi_rad.cos()) + "," +
+            &f64str(offset.y - r + r * (PI - phi_rad).cos() + l2 * phi_rad.sin()) +
+        " A" + &f64str(azi_r_inner) + "," + &f64str(azi_r_inner) + ",0,0,0," +
+            &f64str(offset.x + azi_r_inner) + "," +
+            &f64str(offset.y - r) +
+        " L" + &f64str(offset.x + azi_r_inner) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x + azi_r_outer - 2.*t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x + azi_r_outer - 2.*t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness) +
+        " L" + &f64str(offset.x + azi_r_outer - t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness) +
+        " L" + &f64str(offset.x + azi_r_outer - t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x + azi_r_outer) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x + azi_r_outer) + "," +
+            &f64str(offset.y) +
+        " A" + &f64str(azi_r_outer) + "," + &f64str(azi_r_outer) + ",0,0,1," +
+            &f64str(offset.x + l * phi_rad.sin()) + "," +
+            &f64str(offset.y + l * phi_rad.cos()) +
         " Z";
         writer.attr("d", &path).unwrap();
         writer.end_elem().unwrap();
@@ -356,6 +380,48 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         writer.attr("r", &f64str(rod_dia/2.)).unwrap();
         writer.end_elem().unwrap();
     }
+
+    // TODO: slots for support struts
+}
+
+fn write_azimuthal_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    writer.begin_elem("path").unwrap();
+    cut_style(writer);
+    let t = azi_r_outer - azi_r_inner;
+    let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x) + "," +
+            &f64str(offset.y + raised_dia/2. - strut_tab_width/2.) +
+        " L" + &f64str(offset.x + thickness) + "," +
+            &f64str(offset.y + raised_dia/2. - strut_tab_width/2.) +
+        " L" + &f64str(offset.x + thickness) + "," +
+            &f64str(offset.y + raised_dia/2. + strut_tab_width/2.) +
+        " L" + &f64str(offset.x) + "," +
+            &f64str(offset.y + raised_dia/2. + strut_tab_width/2.) +
+        " L" + &f64str(offset.x) + "," +
+            &f64str(offset.y + raised_dia + 2.*r_margin) +
+        " L" + &f64str(offset.x + t/3.) + "," +
+            &f64str(offset.y + raised_dia + 2.*r_margin) +
+        " L" + &f64str(offset.x + t/3.) + "," +
+            &f64str(offset.y + raised_dia + 2.*r_margin + thickness) +
+        " L" + &f64str(offset.x + 2.*t/3.) + "," +
+            &f64str(offset.y + raised_dia + 2.*r_margin + thickness) +
+        " L" + &f64str(offset.x + 2.*t/3.) + "," +
+            &f64str(offset.y + raised_dia + 2.*r_margin) +
+        " L" + &f64str(offset.x + t) + "," +
+            &f64str(offset.y + raised_dia + 2.*r_margin) +
+        " L" + &f64str(offset.x + t) + "," +
+            &f64str(offset.y) +
+        " L" + &f64str(offset.x + 2.*t/3.) + "," +
+            &f64str(offset.y) +
+        " L" + &f64str(offset.x + 2.*t/3.) + "," +
+            &f64str(offset.y - thickness) +
+        " L" + &f64str(offset.x + t/3.) + "," +
+            &f64str(offset.y - thickness) +
+        " L" + &f64str(offset.x + t/3.) + "," +
+            &f64str(offset.y) +
+        " Z";
+    writer.attr("d", &path).unwrap();
+    writer.end_elem().unwrap();
 }
 
 fn main() {
@@ -368,6 +434,10 @@ fn main() {
         write_base(xmlout, pt(width * in_to_mm/2.0, base_height));
         write_base_bearing(xmlout, pt(width * in_to_mm/2.0 - 20.0, base_height + 100.0));
         write_servo_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
-        write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 300.0));
+        write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 300.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 50.0, base_height + 100.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 50.0, base_height + 100.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 50.0, base_height + 200.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 50.0, base_height + 200.0));
     });
 }
