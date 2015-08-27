@@ -4,6 +4,7 @@ extern crate xml_writer;
 use xml_writer::XmlWriter;
 use std::fs::File;
 use std::io::Write;
+use std::f64::consts::PI;
 
 const in_to_mm: f64 = 25.4;
 const mm_to_in: f64 = 1.00/25.4;
@@ -33,6 +34,11 @@ const lower_stick_dia: f64 = 19.32;
 const rod_dia: f64 = 4.84;
 const tab_margin: f64 = 1.20;
 const axis_h: f64 = 10.00;
+
+const azi_r_inner: f64 = 0.5*base_width + r_margin;
+const azi_r_outer: f64 = azi_r_inner + 20.00;
+const azi_r_margin: f64 = 3.50;
+const azi_angle: f64 = 45.00;
 
 /// Servo measurements
 const servo_shaft_h: f64 = 14.50;
@@ -264,36 +270,92 @@ fn write_base_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.end_elem().unwrap();
 }
 
-fn write_motor_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+fn write_servo_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.begin_elem("path").unwrap();
     cut_style(writer);
+    let elem_height = 0.5*servo_thickness + axis_h;
+    if elem_height < servo_thickness {
+        panic!("write_servo_bearing: Sorry, can't solve with that; the servo doesn't clear the base");
+    }
     let path = "M".to_string() + &f64str(offset.x) + "," +
         &f64str(offset.y) +
     " L" + &f64str(offset.x + servo_body_width) + "," +
         &f64str(offset.y) +
     " L" + &f64str(offset.x + servo_body_width) + "," +
-        &f64str(offset.y - servo_thickness - thickness) +
+        &f64str(offset.y - elem_height - thickness) +
     " L" + &f64str(offset.x + servo_body_width + flange_len) + "," +
-        &f64str(offset.y - servo_thickness - thickness) +
+        &f64str(offset.y - elem_height - thickness) +
     " L" + &f64str(offset.x + servo_body_width + flange_len) + "," +
-        &f64str(offset.y - servo_thickness) +
+        &f64str(offset.y - elem_height) +
     " L" + &f64str(offset.x + servo_body_width + flange_len + tab_margin) + "," +
-        &f64str(offset.y - servo_thickness) + 
+        &f64str(offset.y - elem_height) + 
     " L" + &f64str(offset.x + servo_body_width + flange_len + tab_margin) + "," +
         &f64str(offset.y + 2.0*tab_margin) +
     " L" + &f64str(offset.x - flange_len - tab_margin) + "," +
         &f64str(offset.y + 2.0*tab_margin) + 
     " L" + &f64str(offset.x - flange_len - tab_margin) + "," +
-        &f64str(offset.y - servo_thickness) +
+        &f64str(offset.y - elem_height) +
     " L" + &f64str(offset.x - flange_len) + "," +
-        &f64str(offset.y - servo_thickness) +
+        &f64str(offset.y - elem_height) +
     " L" + &f64str(offset.x - flange_len) + "," +
-        &f64str(offset.y - servo_thickness - thickness) +
+        &f64str(offset.y - elem_height - thickness) +
     " L" + &f64str(offset.x) + "," +
-        &f64str(offset.y - servo_thickness - thickness) +
+        &f64str(offset.y - elem_height - thickness) +
     " Z";
     writer.attr("d", &path).unwrap();
     writer.end_elem().unwrap();
+}
+
+fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    let r = 0.5*rod_dia + azi_r_margin;
+    {
+        writer.begin_elem("path").unwrap();
+        cut_style(writer);
+        let phi_rad = azi_angle*PI/180.;
+        let t = azi_r_outer - azi_r_inner;
+        let l = (r*r + azi_r_outer*azi_r_outer - 2.*r*azi_r_outer*(PI - phi_rad).cos()).sqrt();
+        let l2 = (azi_r_inner*azi_r_inner - r*r).sqrt();
+        let path = "M".to_string() + &f64str(offset.x) + "," +
+            &f64str(offset.y) +
+        " L" + &f64str(offset.x - l * phi_rad.sin()) + "," +
+            &f64str(offset.y + l * phi_rad.cos()) +
+        " A" + &f64str(azi_r_outer) + "," + &f64str(azi_r_outer) + ",0,0,1," +
+            &f64str(offset.x - azi_r_outer) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x - azi_r_outer) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x - azi_r_outer + t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x - azi_r_outer + t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness) +
+        " L" + &f64str(offset.x - azi_r_outer + 2.*t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness) +
+        " L" + &f64str(offset.x - azi_r_outer + 2.*t/3.) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x - azi_r_inner) + "," +
+            &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
+        " L" + &f64str(offset.x - azi_r_inner) + "," +
+            &f64str(offset.y - r) +
+        " A" + &f64str(azi_r_inner) + "," + &f64str(azi_r_inner) + ",0,0,0," +
+            &f64str(offset.x - r * (PI - phi_rad).sin() - l2 * phi_rad.cos()) + "," +
+            &f64str(offset.y - r + r * (PI - phi_rad).cos() + l2 * phi_rad.sin()) +
+        " L" + &f64str(offset.x - r * (PI - phi_rad).sin()) + "," +
+            &f64str(offset.y - r + r * (PI - phi_rad).cos()) +
+        " A" + &f64str(r) + "," + &f64str(r) + ",0,0,1," +
+            &f64str(offset.x + r * (PI - phi_rad).sin()) + "," +
+            &f64str(offset.y - r + r * (PI - phi_rad).cos()) +
+        " Z";
+        writer.attr("d", &path).unwrap();
+        writer.end_elem().unwrap();
+    }
+
+    {
+        writer.begin_elem("circle").unwrap();
+        cut_style(writer);
+        writer.attr("cx", &f64str(offset.x)).unwrap();
+        writer.attr("cy", &f64str(offset.y - r)).unwrap();
+        writer.attr("r", &f64str(rod_dia/2.)).unwrap();
+        writer.end_elem().unwrap();
+    }
 }
 
 fn main() {
@@ -305,6 +367,7 @@ fn main() {
     write_root(&mut xml_out, |xmlout| {
         write_base(xmlout, pt(width * in_to_mm/2.0, base_height));
         write_base_bearing(xmlout, pt(width * in_to_mm/2.0 - 20.0, base_height + 100.0));
-        write_motor_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
+        write_servo_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
+        write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 300.0));
     });
 }
