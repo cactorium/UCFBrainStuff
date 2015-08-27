@@ -32,6 +32,7 @@ const lower_stick_dia: f64 = 19.32;
 
 const rod_dia: f64 = 4.84;
 const tab_margin: f64 = 1.20;
+const axis_h: f64 = 10.00;
 
 /// Servo measurements
 const servo_shaft_h: f64 = 14.50;
@@ -202,17 +203,17 @@ fn write_base<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     {
         writer.begin_elem("rect").unwrap();
         cut_style(writer);
-        writer.attr("x", &f64str(offset.x - 0.5*tab_width));
-        writer.attr("y", &f64str(offset.y + stick_to_bottom - 0.5*raised_dia - r_margin - thickness));
-        writer.attr("width", &f64str(tab_width));
-        writer.attr("height", &f64str(raised_dia + 2.*r_margin + 2.*thickness));
+        writer.attr("x", &f64str(offset.x - 0.5*tab_width)).unwrap();
+        writer.attr("y", &f64str(offset.y + stick_to_bottom - 0.5*raised_dia - r_margin - thickness)).unwrap();
+        writer.attr("width", &f64str(tab_width)).unwrap();
+        writer.attr("height", &f64str(raised_dia + 2.*r_margin + 2.*thickness)).unwrap();
         writer.end_elem().unwrap();
 
         writer.begin_elem("circle").unwrap();
         cut_style(writer);
-        writer.attr("cx", &f64str(offset.x));
-        writer.attr("cy", &f64str(offset.y + stick_to_bottom));
-        writer.attr("r", &f64str(0.5*raised_dia - r_margin));
+        writer.attr("cx", &f64str(offset.x)).unwrap();
+        writer.attr("cy", &f64str(offset.y + stick_to_bottom)).unwrap();
+        writer.attr("r", &f64str(0.5*raised_dia - r_margin)).unwrap();
         writer.end_elem().unwrap();
     }
 
@@ -220,15 +221,46 @@ fn write_base<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     {
         writer.begin_elem("rect").unwrap();
         cut_style(writer);
-        writer.attr("x", &f64str(offset.x - 0.5*tab_width));
-        writer.attr("y", &f64str(offset.y + stick_to_bottom + 0.5*raised_dia + r_margin + thickness + bearing_tolerance));
-        writer.attr("width", &f64str(tab_width));
-        writer.attr("height", &f64str(thickness));
+        writer.attr("x", &f64str(offset.x - 0.5*tab_width)).unwrap();
+        writer.attr("y", &f64str(offset.y + stick_to_bottom + 0.5*raised_dia + r_margin + thickness + bearing_tolerance)).unwrap();
+        writer.attr("width", &f64str(tab_width)).unwrap();
+        writer.attr("height", &f64str(thickness)).unwrap();
         writer.end_elem().unwrap();
     }
 }
 
-fn base_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+fn write_base_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    writer.begin_elem("circle").unwrap();
+    cut_style(writer);
+    writer.attr("cx", &f64str(offset.x)).unwrap();
+    writer.attr("cy", &f64str(offset.y)).unwrap();
+    writer.attr("r", &f64str(0.5*rod_dia)).unwrap();
+    writer.end_elem().unwrap();
+
+    writer.begin_elem("path").unwrap();
+    cut_style(writer);
+    let path = "M".to_string() + &f64str(offset.x - 0.5*rod_dia - r_margin) + "," +
+        &f64str(offset.y - axis_h) +
+    " L" + &f64str(offset.x - 0.5*rod_dia - r_margin) + "," +
+        &f64str(offset.y) + 
+    " A" + &f64str(0.5*rod_dia + r_margin) + "," + &f64str(0.5*rod_dia + r_margin) + ",0,0,0," +
+        &f64str(offset.x + 0.5*rod_dia + r_margin) + "," +
+        &f64str(offset.y) +
+    " L" + &f64str(offset.x + 0.5*rod_dia + r_margin) + "," +
+        &f64str(offset.y - axis_h) +
+    " L" + &f64str(offset.x + 0.5*rod_dia + r_margin - tab_margin) + "," +
+        &f64str(offset.y - axis_h) + 
+    " L" + &f64str(offset.x + 0.5*rod_dia + r_margin - tab_margin) + "," +
+        &f64str(offset.y - axis_h - thickness) +
+    " L" + &f64str(offset.x - 0.5*rod_dia - r_margin + tab_margin) + "," +
+        &f64str(offset.y - axis_h - thickness) +
+    " L" + &f64str(offset.x - 0.5*rod_dia - r_margin + tab_margin) + "," +
+        &f64str(offset.y - axis_h) +
+    " L" + &f64str(offset.x - 0.5*rod_dia - r_margin) + "," +
+        &f64str(offset.y - axis_h) +
+    " Z";
+    writer.attr("d", &path).unwrap();
+    writer.end_elem().unwrap();
 }
 
 fn motor_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
@@ -242,5 +274,6 @@ fn main() {
 
     write_root(&mut xml_out, |xmlout| {
         write_base(xmlout, pt(width * in_to_mm/2.0, base_height));
+        write_base_bearing(xmlout, pt(width * in_to_mm/2.0, base_height + 100.0));
     });
 }
