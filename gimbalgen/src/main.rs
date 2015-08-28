@@ -320,12 +320,12 @@ fn write_servo_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
 }
 
 fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    let phi_rad = azi_angle*PI/180.;
     let r = 0.5*rod_dia + azi_r_margin;
+    let t = azi_r_outer - azi_r_inner;
     {
         writer.begin_elem("path").unwrap();
         cut_style(writer);
-        let phi_rad = azi_angle*PI/180.;
-        let t = azi_r_outer - azi_r_inner;
         let l = (-r*r + azi_r_outer*azi_r_outer + 2.*r*azi_r_outer*(PI - phi_rad).cos()).sqrt();
         let l2 = (azi_r_inner*azi_r_inner - r*r).sqrt();
         let path = "M".to_string() + &f64str(offset.x) + "," +
@@ -396,7 +396,32 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         // TODO: slots for support struts
         writer.begin_elem("path").unwrap();
         cut_style(writer);
+        let path = "M".to_string() + &f64str(offset.x + (azi_r_outer - t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x + (azi_r_outer - t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x + (azi_r_outer - 2.*t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x + (azi_r_outer - 2.*t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+            " Z";
+        writer.attr("d", &path).unwrap();
         writer.end_elem().unwrap();
+
+        writer.begin_elem("path").unwrap();
+        cut_style(writer);
+        let path = "M".to_string() + &f64str(offset.x - (azi_r_outer - t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x - (azi_r_outer - t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x - (azi_r_outer - 2.*t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x - (azi_r_outer - 2.*t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+            " Z";
+        writer.attr("d", &path).unwrap();
+        writer.end_elem().unwrap();
+
     }
 }
 
