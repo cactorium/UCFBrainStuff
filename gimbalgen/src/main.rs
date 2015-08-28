@@ -658,17 +658,23 @@ fn main() {
         write_base(xmlout, pt(width * in_to_mm/2.0, base_height));
         write_base_bearing(xmlout, pt(width * in_to_mm/2.0 - 20.0, base_height + 100.0));
         write_servo_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
-        write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 300.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 60.0, base_height + 100.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, base_height + 100.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 60.0, base_height + 200.0));
-        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, base_height + 200.0));
-        write_azimuthal_servo_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 150.0));
-        write_azimuthal_bearing_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 200.0));
-        write_elevator_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 300.0));
-        write_elevator_stick_strut(xmlout, pt(width * in_to_mm/2.0 - 40., base_height + 410.0));
-        write_elevator_stick_strut(xmlout, pt(width * in_to_mm/2.0 + 40., base_height + 410.0));
-        write_elevator_servo_strut(xmlout, pt(width * in_to_mm/2.0 - 80., base_height + 410.0));
-        write_elevator_bearing_strut(xmlout, pt(width * in_to_mm/2.0 + 80., base_height + 410.0));
+        let mut offsety = base_height + 100.0;
+
+        write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0, offsety + 200.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 60.0, offsety));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, offsety));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 - 60.0, offsety + 100.0));
+        write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, offsety + 100.0));
+        write_azimuthal_servo_mount(xmlout, pt(width * in_to_mm/2.0,  offsety + 50.0));
+        write_azimuthal_bearing_mount(xmlout, pt(width * in_to_mm/2.0, offsety + 100.0));
+        write_elevator_arm(xmlout, pt(width * in_to_mm/2.0, offsety+ 200.0));
+        write_elevator_stick_strut(xmlout, pt(width * in_to_mm/2.0 - 40., offsety + 310.0));
+        write_elevator_stick_strut(xmlout, pt(width * in_to_mm/2.0 + 40., offsety+ 310.0));
+        write_elevator_servo_strut(xmlout, pt(width * in_to_mm/2.0 - 80., offsety + 310.0));
+        write_elevator_bearing_strut(xmlout, pt(width * in_to_mm/2.0 + 80., offsety + 310.0));
+
+        offsety += 200.;
+        write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0, offsety + 200.0));
+        write_elevator_arm(xmlout, pt(width * in_to_mm/2.0, offsety+ 200.0));
     });
 }
