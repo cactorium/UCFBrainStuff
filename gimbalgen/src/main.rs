@@ -36,7 +36,7 @@ const rod_dia: f64 = 4.84;
 const tab_margin: f64 = 1.20;
 const axis_h: f64 = 10.00;
 
-const strut_tab_width: f64 = 14.00;
+const strut_tab_width: f64 = servo_body_width + 16.00;
 
 fn azi_r_inner() -> f64 { (0.5*base_width)/azi_angle.cos() + r_margin }
 fn azi_r_outer() -> f64 { azi_r_inner() + flange_to_end + thickness }
@@ -284,38 +284,26 @@ fn write_base_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.end_elem().unwrap();
 }
 
-fn write_servo_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+fn write_base_servo_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.begin_elem("path").unwrap();
     cut_style(writer);
-    let elem_height = 0.5*servo_thickness + axis_h;
-    if elem_height < servo_thickness {
+    let elem_height = -0.5*servo_thickness + axis_h;
+    if elem_height < 0. {
         panic!("write_servo_bearing: Sorry, can't solve with that; the servo doesn't clear the base");
     }
-    let path = "M".to_string() + &f64str(offset.x) + "," +
-        &f64str(offset.y) +
-    " L" + &f64str(offset.x + servo_body_width) + "," +
-        &f64str(offset.y) +
-    " L" + &f64str(offset.x + servo_body_width) + "," +
-        &f64str(offset.y - elem_height - thickness) +
-    " L" + &f64str(offset.x + servo_body_width + flange_len) + "," +
-        &f64str(offset.y - elem_height - thickness) +
-    " L" + &f64str(offset.x + servo_body_width + flange_len) + "," +
-        &f64str(offset.y - elem_height) +
-    " L" + &f64str(offset.x + servo_body_width + flange_len + tab_margin) + "," +
-        &f64str(offset.y - elem_height) + 
-    " L" + &f64str(offset.x + servo_body_width + flange_len + tab_margin) + "," +
-        &f64str(offset.y + 2.0*tab_margin) +
-    " L" + &f64str(offset.x - flange_len - tab_margin) + "," +
-        &f64str(offset.y + 2.0*tab_margin) + 
-    " L" + &f64str(offset.x - flange_len - tab_margin) + "," +
-        &f64str(offset.y - elem_height) +
-    " L" + &f64str(offset.x - flange_len) + "," +
-        &f64str(offset.y - elem_height) +
-    " L" + &f64str(offset.x - flange_len) + "," +
-        &f64str(offset.y - elem_height - thickness) +
-    " L" + &f64str(offset.x) + "," +
-        &f64str(offset.y - elem_height - thickness) +
-    " Z";
+    let path = "M".to_string() + &f64str(offset.x - 0.05) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + servo_body_width + 0.05) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + servo_body_width + 0.05) + "," + &f64str(offset.y + servo_thickness) +
+        " L" + &f64str(offset.x + servo_body_width + 0.05 + flange_len) + "," + &f64str(offset.y + servo_thickness) +
+        " L" + &f64str(offset.x + servo_body_width + 0.05 + flange_len) + "," + &f64str(offset.y - elem_height - thickness) +
+        " L" + &f64str(offset.x + servo_body_width) + "," + &f64str(offset.y - elem_height - thickness) +
+        " L" + &f64str(offset.x + servo_body_width) + "," + &f64str(offset.y - elem_height) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - elem_height) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - elem_height - thickness) +
+        " L" + &f64str(offset.x - 0.05 - flange_len) + "," + &f64str(offset.y - elem_height - thickness) +
+        " L" + &f64str(offset.x - 0.05 - flange_len) + "," + &f64str(offset.y + servo_thickness) +
+        " L" + &f64str(offset.x - 0.05) + "," + &f64str(offset.y + servo_thickness) +
+        " Z";
     writer.attr("d", &path).unwrap();
     writer.end_elem().unwrap();
 }
@@ -478,17 +466,17 @@ fn write_azimuthal_servo_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Poin
             &f64str(offset.y) +
         " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge + flange_len) + "," +
             &f64str(offset.y + servo_thickness + 2.*tab_margin) +
-        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width - flange_len) + "," +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge) + " ," +
             &f64str(offset.y + servo_thickness + 2.*tab_margin) +
-        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width - flange_len) + "," +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge) + " ," +
             &f64str(offset.y) +
-        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width) + "," +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width) + " ," +
             &f64str(offset.y) +
-        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width) + "," +
-            &f64str(offset.y + servo_thickness) +
-        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge) + "," +
-            &f64str(offset.y + servo_thickness) +
-        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge) + "," +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width) + " ," +
+            &f64str(offset.y + servo_thickness + 2.*tab_margin) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width - flange_len) + " ," +
+            &f64str(offset.y + servo_thickness + 2.*tab_margin) +
+        " L" + &f64str(offset.x + strut_tab_width/2. + shaft_to_edge - servo_body_width - flange_len) + " ," +
             &f64str(offset.y) +
         " Z";
     writer.attr("d", &path).unwrap();
@@ -658,7 +646,7 @@ fn main() {
     write_root(&mut xml_out, |xmlout| {
         write_base(xmlout, pt(width * in_to_mm/2.0, base_height));
         write_base_bearing(xmlout, pt(width * in_to_mm/2.0 - 20.0, base_height + 100.0));
-        write_servo_bearing(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
+        write_base_servo_mount(xmlout, pt(width * in_to_mm/2.0 + 20.0, base_height + 100.0));
         let mut offsety = base_height + 100.0;
 
         write_azimuth_arm(xmlout, pt(width * in_to_mm/2.0, offsety + 200.0));
