@@ -54,6 +54,7 @@ const elv_drop: f64 = 5.00;
 /// Servo measurements
 const servo_shaft_h: f64 = 14.50;
 const servo_body_width: f64 = 22.50;
+const servo_arm_len: f64 = 16.50;
 const shaft_to_edge: f64 = 5.50;
 const flange_to_end: f64 = 21.00;
 const flange_len: f64 = 5.00;
@@ -109,7 +110,7 @@ fn f64_to_string(arg: f64) -> String {
     }
     result.push('.');
     f = f * 10.0;
-    for _ in 0..3 {
+    for _ in 0..4 {
         let digit = f.floor() as i64;
         // println!("{}, {}", f, digit);
         result.push(digit_to_char(digit));
@@ -611,8 +612,8 @@ fn write_elevator_servo_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point
     writer.begin_elem("path").unwrap();
     cut_style(writer);
     let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
-        " L" + &f64str(offset.x) + "," + &f64str(offset.y + servo_thickness/3.) +
-        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y + servo_thickness/3.) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y + servo_thickness/3. + servo_arm_len) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y + servo_thickness/3. + servo_arm_len) +
         " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y) +
         " L" + &f64str(offset.x + lower_stick_dia + thickness) + "," + &f64str(offset.y) +
         " L" + &f64str(offset.x + lower_stick_dia + thickness) + "," + &f64str(offset.y - servo_thickness/3.) +
