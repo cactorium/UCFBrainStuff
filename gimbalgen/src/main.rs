@@ -30,6 +30,7 @@ const stick_to_bottom: f64 = 36.79;
 const raised_dia: f64 = 61.40;
 const outer_stick_dia: f64 = 42.53;
 const lower_stick_dia: f64 = 19.32;
+const stick_h: f64 = 20.00;
 
 const rod_dia: f64 = 4.84;
 const tab_margin: f64 = 1.20;
@@ -57,10 +58,12 @@ const flange_to_end: f64 = 21.00;
 const flange_len: f64 = 5.00;
 const servo_thickness: f64 = 11.00;
 
+#[derive(Clone)]
 struct Point {
     x: f64,
     y: f64
 }
+
 fn pt(x: f64, y: f64) -> Point {
     Point{x: x, y: y}
 }
@@ -493,17 +496,17 @@ fn write_azimuthal_bearing_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Po
         cut_style(writer);
         writer.attr("cx", &f64str(offset.x + strut_tab_width/2.)).unwrap();
         writer.attr("cy", &f64str(offset.y + servo_thickness/2.)).unwrap();
-        writer.attr("r", &f64str(rod_dia)).unwrap();
+        writer.attr("r", &f64str(rod_dia/2.)).unwrap();
         writer.end_elem().unwrap();
     }
 }
 
 fn write_elevator_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    let h = rod_dia/2. + r_margin + raised_dia/2. + elv_clearance;
+    let phi_rad = elv_angle*PI/180.;
     {
         writer.begin_elem("path").unwrap();
         cut_style(writer);
-        let phi_rad = elv_angle*PI/180.;
-        let h = rod_dia/2. + r_margin + raised_dia/2. + elv_clearance;
         // let l = ((elv_r_inner*elv_r_inner) - (h*h) + (2.*h*elv_r_inner)*((PI - phi_rad).cos())).sqrt();
         let l = -h*phi_rad.cos() + (-h*h*phi_rad.sin() + elv_r_inner*elv_r_inner).sqrt();
         println!("{}: {}", elv_r_inner, ((l * phi_rad.sin())*(l * phi_rad.sin()) + (h + l*phi_rad.cos())*(h + l*phi_rad.cos())).sqrt());
@@ -552,13 +555,72 @@ fn write_elevator_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     }
 
     {
-        // TODO: slots for support struts
-        writer.begin_elem("path").unwrap();
+        // slots for support struts
+        writer.begin_elem("rect").unwrap();
         cut_style(writer);
+        writer.attr("x", &f64str(offset.x + lower_stick_dia/2.)).unwrap();
+        writer.attr("y", &f64str(offset.y + h + 4.*thickness + phi_rad.tan()*(lower_stick_dia/2. - thickness))).unwrap();
+        writer.attr("width", &f64str(thickness)).unwrap();
+        writer.attr("height", &f64str(stick_h)).unwrap();
+        writer.end_elem().unwrap();
+
+        writer.begin_elem("rect").unwrap();
+        cut_style(writer);
+        writer.attr("x", &f64str(offset.x - lower_stick_dia/2. - thickness)).unwrap();
+        writer.attr("y", &f64str(offset.y + h + 4.*thickness + phi_rad.tan()*(lower_stick_dia/2. - thickness))).unwrap();
+        writer.attr("width", &f64str(thickness)).unwrap();
+        writer.attr("height", &f64str(stick_h)).unwrap();
         writer.end_elem().unwrap();
     }
+}
 
+fn write_elevator_stick_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    writer.begin_elem("path").unwrap();
+    cut_style(writer);
+    let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y + 2.*thickness) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y + 2.*thickness) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + lower_stick_dia + thickness) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + lower_stick_dia + thickness) + "," + &f64str(offset.y - stick_h) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y - stick_h) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y - stick_h - thickness) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - stick_h - thickness) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - stick_h) +
+        " L" + &f64str(offset.x - thickness) + "," + &f64str(offset.y - stick_h) +
+        " L" + &f64str(offset.x - thickness) + "," + &f64str(offset.y) +
+        " Z";
+    writer.attr("d", &path).unwrap();
+    writer.end_elem().unwrap();
+}
+fn write_elevator_servo_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    writer.begin_elem("path").unwrap();
+    cut_style(writer);
+    let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y + servo_thickness/3.) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y + servo_thickness/3.) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + lower_stick_dia + thickness) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x + lower_stick_dia + thickness) + "," + &f64str(offset.y - servo_thickness/3.) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y - servo_thickness/3.) +
+        " L" + &f64str(offset.x + lower_stick_dia) + "," + &f64str(offset.y - 2.*servo_thickness/3.) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - 2.*servo_thickness/3.) +
+        " L" + &f64str(offset.x) + "," + &f64str(offset.y - servo_thickness/3.) +
+        " L" + &f64str(offset.x - thickness) + "," + &f64str(offset.y - servo_thickness/3.) +
+        " L" + &f64str(offset.x - thickness) + "," + &f64str(offset.y) +
+        " Z";
+    writer.attr("d", &path).unwrap();
+    writer.end_elem().unwrap();
+}
 
+fn write_elevator_bearing_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    write_elevator_servo_strut(writer, offset.clone());
+    writer.begin_elem("circle").unwrap();
+    cut_style(writer);
+    writer.attr("cx", &f64str(offset.x + lower_stick_dia/2.)).unwrap();
+    writer.attr("cy", &f64str(offset.y - servo_thickness/6.)).unwrap();
+    writer.attr("r", &f64str(rod_dia/2.)).unwrap();
+    writer.end_elem().unwrap();
 }
 
 fn main() {
@@ -578,6 +640,10 @@ fn main() {
         write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, base_height + 200.0));
         write_azimuthal_servo_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 150.0));
         write_azimuthal_bearing_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 200.0));
-        write_elevator_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 350.0));
+        write_elevator_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 300.0));
+        write_elevator_stick_strut(xmlout, pt(width * in_to_mm/2.0 - 40., base_height + 410.0));
+        write_elevator_stick_strut(xmlout, pt(width * in_to_mm/2.0 + 40., base_height + 410.0));
+        write_elevator_servo_strut(xmlout, pt(width * in_to_mm/2.0 - 80., base_height + 410.0));
+        write_elevator_bearing_strut(xmlout, pt(width * in_to_mm/2.0 + 80., base_height + 410.0));
     });
 }
