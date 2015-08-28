@@ -20,7 +20,7 @@ const thickness: f64 = 3.40;
 const base_width: f64 = 81.81;
 const base_height: f64 = 77.81;
 
-const base_hmargin: f64 = 20.00;
+const base_hmargin: f64 = 0.00;
 
 const bearing_tolerance: f64 = 1.00;
 const r_margin: f64 = 2.50;
@@ -38,16 +38,17 @@ const axis_h: f64 = 10.00;
 
 const strut_tab_width: f64 = 14.00;
 
-const azi_r_inner: f64 = 0.5*base_width + r_margin;
-const azi_r_outer: f64 = azi_r_inner + flange_to_end + thickness;
+fn azi_r_inner() -> f64 { (0.5*base_width)/azi_angle.cos() + r_margin }
+fn azi_r_outer() -> f64 { azi_r_inner() + flange_to_end + thickness }
 const azi_r_margin: f64 = 3.50;
 const azi_angle: f64 = 45.00;
 
-const elv_r_inner: f64 = azi_r_outer + servo_shaft_h;
-const elv_r_outer: f64 = elv_r_inner + elv_r_margin;
+fn elv_r_inner() -> f64 { azi_r_outer() + servo_shaft_h }
+fn elv_r_outer() -> f64 { elv_r_inner() + elv_r_margin }
 const elv_r_margin: f64 = 10.00;
 const elv_angle: f64 = 45.00;
 const elv_clearance: f64 = 1.00;
+const elv_drop: f64 = 5.00;
 
 
 /// Servo measurements
@@ -140,7 +141,7 @@ fn cut_style<W: Write>(writer: &mut XmlWriter<W>) {
     writer.attr("stroke", "red").unwrap();
     writer.attr("fill", "transparent").unwrap();
     writer.attr("fill-opacity", "0.0").unwrap();
-    writer.attr("stroke-width", "0.001in").unwrap();
+    writer.attr("stroke-width", &f64str(0.001*in_to_mm)).unwrap();
 }
 
 fn write_base<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
@@ -322,33 +323,33 @@ fn write_servo_bearing<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
 fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     let phi_rad = azi_angle*PI/180.;
     let r = 0.5*rod_dia + azi_r_margin;
-    let t = azi_r_outer - azi_r_inner;
+    let t = azi_r_outer() - azi_r_inner();
     {
         writer.begin_elem("path").unwrap();
         cut_style(writer);
-        let l = (-r*r + azi_r_outer*azi_r_outer + 2.*r*azi_r_outer*(PI - phi_rad).cos()).sqrt();
-        let l2 = (azi_r_inner*azi_r_inner - r*r).sqrt();
+        let l = (-r*r + azi_r_outer()*azi_r_outer() + 2.*r*azi_r_outer()*(PI - phi_rad).cos()).sqrt();
+        let l2 = (azi_r_inner()*azi_r_inner() - r*r).sqrt();
         let path = "M".to_string() + &f64str(offset.x) + "," +
             &f64str(offset.y) +
         " L" + &f64str(offset.x - l * phi_rad.sin()) + "," +
             &f64str(offset.y + l * phi_rad.cos()) +
-        " A" + &f64str(azi_r_outer) + "," + &f64str(azi_r_outer) + ",0,0,1," +
-            &f64str(offset.x - azi_r_outer) + "," + &f64str(offset.y) +
-        " L" + &f64str(offset.x - azi_r_outer) + "," +
+        " A" + &f64str(azi_r_outer()) + "," + &f64str(azi_r_outer()) + ",0,0,1," +
+            &f64str(offset.x - azi_r_outer()) + "," + &f64str(offset.y) +
+        " L" + &f64str(offset.x - azi_r_outer()) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x - azi_r_outer + t/3.) + "," +
+        " L" + &f64str(offset.x - azi_r_outer() + t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x - azi_r_outer + t/3.) + "," +
+        " L" + &f64str(offset.x - azi_r_outer() + t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness) +
-        " L" + &f64str(offset.x - azi_r_outer + 2.*t/3.) + "," +
+        " L" + &f64str(offset.x - azi_r_outer() + 2.*t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness) +
-        " L" + &f64str(offset.x - azi_r_outer + 2.*t/3.) + "," +
+        " L" + &f64str(offset.x - azi_r_outer() + 2.*t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x - azi_r_inner) + "," +
+        " L" + &f64str(offset.x - azi_r_inner()) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x - azi_r_inner) + "," +
+        " L" + &f64str(offset.x - azi_r_inner()) + "," +
             &f64str(offset.y - r) +
-        " A" + &f64str(azi_r_inner) + "," + &f64str(azi_r_inner) + ",0,0,0," +
+        " A" + &f64str(azi_r_inner()) + "," + &f64str(azi_r_inner()) + ",0,0,0," +
             &f64str(offset.x - r * (PI - phi_rad).sin() - l2 * phi_rad.cos()) + "," +
             &f64str(offset.y - r + r * (PI - phi_rad).cos() + l2 * phi_rad.sin()) +
         " L" + &f64str(offset.x - r * (PI - phi_rad).sin()) + "," +
@@ -358,24 +359,24 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
             &f64str(offset.y - r + r * (PI - phi_rad).cos()) +
         " L" + &f64str(offset.x + r * (PI - phi_rad).sin() + l2 * phi_rad.cos()) + "," +
             &f64str(offset.y - r + r * (PI - phi_rad).cos() + l2 * phi_rad.sin()) +
-        " A" + &f64str(azi_r_inner) + "," + &f64str(azi_r_inner) + ",0,0,0," +
-            &f64str(offset.x + azi_r_inner) + "," +
+        " A" + &f64str(azi_r_inner()) + "," + &f64str(azi_r_inner()) + ",0,0,0," +
+            &f64str(offset.x + azi_r_inner()) + "," +
             &f64str(offset.y - r) +
-        " L" + &f64str(offset.x + azi_r_inner) + "," +
+        " L" + &f64str(offset.x + azi_r_inner()) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x + azi_r_outer - 2.*t/3.) + "," +
+        " L" + &f64str(offset.x + azi_r_outer() - 2.*t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x + azi_r_outer - 2.*t/3.) + "," +
+        " L" + &f64str(offset.x + azi_r_outer() - 2.*t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness) +
-        " L" + &f64str(offset.x + azi_r_outer - t/3.) + "," +
+        " L" + &f64str(offset.x + azi_r_outer() - t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness) +
-        " L" + &f64str(offset.x + azi_r_outer - t/3.) + "," +
+        " L" + &f64str(offset.x + azi_r_outer() - t/3.) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x + azi_r_outer) + "," +
+        " L" + &f64str(offset.x + azi_r_outer()) + "," +
             &f64str(offset.y - r - 0.5*servo_thickness - thickness) +
-        " L" + &f64str(offset.x + azi_r_outer) + "," +
+        " L" + &f64str(offset.x + azi_r_outer()) + "," +
             &f64str(offset.y) +
-        " A" + &f64str(azi_r_outer) + "," + &f64str(azi_r_outer) + ",0,0,1," +
+        " A" + &f64str(azi_r_outer()) + "," + &f64str(azi_r_outer()) + ",0,0,1," +
             &f64str(offset.x + l * phi_rad.sin()) + "," +
             &f64str(offset.y + l * phi_rad.cos()) +
         " Z";
@@ -396,28 +397,28 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         // TODO: slots for support struts
         writer.begin_elem("path").unwrap();
         cut_style(writer);
-        let path = "M".to_string() + &f64str(offset.x + (azi_r_outer - t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
-            " L" + &f64str(offset.x + (azi_r_outer - t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
-            " L" + &f64str(offset.x + (azi_r_outer - 2.*t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
-            " L" + &f64str(offset.x + (azi_r_outer - 2.*t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+        let path = "M".to_string() + &f64str(offset.x + (azi_r_outer() - t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x + (azi_r_outer() - t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x + (azi_r_outer() - 2.*t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - 2.*t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x + (azi_r_outer() - 2.*t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - 2.*t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
             " Z";
         writer.attr("d", &path).unwrap();
         writer.end_elem().unwrap();
 
         writer.begin_elem("path").unwrap();
         cut_style(writer);
-        let path = "M".to_string() + &f64str(offset.x - (azi_r_outer - t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
-            " L" + &f64str(offset.x - (azi_r_outer - t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
-            " L" + &f64str(offset.x - (azi_r_outer - 2.*t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
-            " L" + &f64str(offset.x - (azi_r_outer - 2.*t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
-                + &f64str(offset.y - r + (azi_r_outer - 2.*t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+        let path = "M".to_string() + &f64str(offset.x - (azi_r_outer() - t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x - (azi_r_outer() - t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x - (azi_r_outer() - 2.*t/3.)*phi_rad.sin() - thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - 2.*t/3.)*phi_rad.cos() - thickness/2. * phi_rad.sin()) +
+            " L" + &f64str(offset.x - (azi_r_outer() - 2.*t/3.)*phi_rad.sin() + thickness/2. * phi_rad.cos()) + ","
+                + &f64str(offset.y - r + (azi_r_outer() - 2.*t/3.)*phi_rad.cos() + thickness/2. * phi_rad.sin()) +
             " Z";
         writer.attr("d", &path).unwrap();
         writer.end_elem().unwrap();
@@ -428,16 +429,16 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
 fn write_azimuthal_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     writer.begin_elem("path").unwrap();
     cut_style(writer);
-    let t = azi_r_outer - azi_r_inner;
+    let t = azi_r_outer() - azi_r_inner();
     let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y) +
         " L" + &f64str(offset.x) + "," +
-            &f64str(offset.y + raised_dia/2. - strut_tab_width/2.) +
+            &f64str(offset.y + raised_dia/2. + r_margin - strut_tab_width/2.) +
         " L" + &f64str(offset.x + thickness) + "," +
-            &f64str(offset.y + raised_dia/2. - strut_tab_width/2.) +
+            &f64str(offset.y + raised_dia/2. + r_margin - strut_tab_width/2.) +
         " L" + &f64str(offset.x + thickness) + "," +
-            &f64str(offset.y + raised_dia/2. + strut_tab_width/2.) +
+            &f64str(offset.y + raised_dia/2. + r_margin + strut_tab_width/2.) +
         " L" + &f64str(offset.x) + "," +
-            &f64str(offset.y + raised_dia/2. + strut_tab_width/2.) +
+            &f64str(offset.y + raised_dia/2. + r_margin + strut_tab_width/2.) +
         " L" + &f64str(offset.x) + "," +
             &f64str(offset.y + raised_dia + 2.*r_margin) +
         " L" + &f64str(offset.x + t/3.) + "," +
@@ -527,51 +528,51 @@ fn write_azimuthal_bearing_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Po
 }
 
 fn write_elevator_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
-    let h = rod_dia/2. + r_margin + raised_dia/2. + elv_clearance;
+    let h = rod_dia/2. + r_margin + raised_dia/2. + elv_clearance - elv_drop;
     let phi_rad = elv_angle*PI/180.;
     {
         writer.begin_elem("path").unwrap();
         cut_style(writer);
-        // let l = ((elv_r_inner*elv_r_inner) - (h*h) + (2.*h*elv_r_inner)*((PI - phi_rad).cos())).sqrt();
-        let l = -h*phi_rad.cos() + (-h*h*phi_rad.sin() + elv_r_inner*elv_r_inner).sqrt();
-        println!("{}: {}", elv_r_inner, ((l * phi_rad.sin())*(l * phi_rad.sin()) + (h + l*phi_rad.cos())*(h + l*phi_rad.cos())).sqrt());
+        // let l = ((elv_r_inner()*elv_r_inner()) - (h*h) + (2.*h*elv_r_inner())*((PI - phi_rad).cos())).sqrt();
+        let l = -h*phi_rad.cos() + (-h*h*phi_rad.sin() + elv_r_inner()*elv_r_inner()).sqrt();
+        println!("{}: {}", elv_r_inner(), ((l * phi_rad.sin())*(l * phi_rad.sin()) + (h + l*phi_rad.cos())*(h + l*phi_rad.cos())).sqrt());
         let cornery = servo_thickness/2.;
-        let cornerx = (elv_r_inner*elv_r_inner - cornery*cornery).sqrt();
+        let cornerx = (elv_r_inner()*elv_r_inner() - cornery*cornery).sqrt();
         let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y + h) +
             " L" + &f64str(offset.x + l * phi_rad.sin()) + "," +
                 &f64str(offset.y + h + l * phi_rad.cos()) +
-            " A" + &f64str(elv_r_inner) + "," + &f64str(elv_r_inner) + ",0,0,0," +
+            " A" + &f64str(elv_r_inner()) + "," + &f64str(elv_r_inner()) + ",0,0,0," +
                 &f64str(offset.x + cornerx) + "," + &f64str(offset.y + cornery) +
-            " L" + &f64str(offset.x + elv_r_inner) + "," + &f64str(offset.y + cornery) +
-            " L" + &f64str(offset.x + elv_r_inner) + "," +
+            " L" + &f64str(offset.x + elv_r_inner()) + "," + &f64str(offset.y + cornery) +
+            " L" + &f64str(offset.x + elv_r_inner()) + "," +
                 &f64str(offset.y + cornery - servo_thickness/3.) +
-            " L" + &f64str(offset.x + elv_r_inner + thickness) + "," +
+            " L" + &f64str(offset.x + elv_r_inner() + thickness) + "," +
                 &f64str(offset.y + cornery - servo_thickness/3.) +
-            " L" + &f64str(offset.x + elv_r_inner + thickness) + "," +
+            " L" + &f64str(offset.x + elv_r_inner() + thickness) + "," +
                 &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
-            " L" + &f64str(offset.x + elv_r_inner) + "," +
+            " L" + &f64str(offset.x + elv_r_inner()) + "," +
                 &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
-            " L" + &f64str(offset.x + elv_r_inner) + "," +
+            " L" + &f64str(offset.x + elv_r_inner()) + "," +
                 &f64str(offset.y + cornery - servo_thickness) +
-            " L" + &f64str(offset.x + elv_r_outer) + "," +
+            " L" + &f64str(offset.x + elv_r_outer()) + "," +
                 &f64str(offset.y + cornery - servo_thickness) +
-            " L" + &f64str(offset.x + elv_r_outer) + "," + &f64str(offset.y) +
-            " A" + &f64str(elv_r_outer) + "," + &f64str(elv_r_outer) + ",1,0,1," +
-                &f64str(offset.x - elv_r_outer) + "," + &f64str(offset.y) +
-            " L" + &f64str(offset.x - elv_r_outer) + "," +
+            " L" + &f64str(offset.x + elv_r_outer()) + "," + &f64str(offset.y) +
+            " A" + &f64str(elv_r_outer()) + "," + &f64str(elv_r_outer()) + ",1,0,1," +
+                &f64str(offset.x - elv_r_outer()) + "," + &f64str(offset.y) +
+            " L" + &f64str(offset.x - elv_r_outer()) + "," +
                 &f64str(offset.y + cornery - servo_thickness) +
-            " L" + &f64str(offset.x - elv_r_inner) + "," +
+            " L" + &f64str(offset.x - elv_r_inner()) + "," +
                 &f64str(offset.y + cornery - servo_thickness) +
-            " L" + &f64str(offset.x - elv_r_inner) + "," +
+            " L" + &f64str(offset.x - elv_r_inner()) + "," +
                 &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
-            " L" + &f64str(offset.x - elv_r_inner - thickness) + "," +
+            " L" + &f64str(offset.x - elv_r_inner() - thickness) + "," +
                 &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
-            " L" + &f64str(offset.x - elv_r_inner - thickness) + "," +
+            " L" + &f64str(offset.x - elv_r_inner() - thickness) + "," +
                 &f64str(offset.y + cornery - servo_thickness/3.) +
-            " L" + &f64str(offset.x - elv_r_inner) + "," +
+            " L" + &f64str(offset.x - elv_r_inner()) + "," +
                 &f64str(offset.y + cornery - servo_thickness/3.) +
-            " L" + &f64str(offset.x - elv_r_inner) + "," + &f64str(offset.y + cornery) +
-            " A" + &f64str(elv_r_inner) + "," + &f64str(elv_r_inner) + ",0,0,0," +
+            " L" + &f64str(offset.x - elv_r_inner()) + "," + &f64str(offset.y + cornery) +
+            " A" + &f64str(elv_r_inner()) + "," + &f64str(elv_r_inner()) + ",0,0,0," +
                 &f64str(offset.x - l * phi_rad.sin()) + "," +
                 &f64str(offset.y + h + l * phi_rad.cos()) +
             " Z";
