@@ -42,6 +42,13 @@ const azi_r_outer: f64 = azi_r_inner + flange_to_end + thickness;
 const azi_r_margin: f64 = 3.50;
 const azi_angle: f64 = 45.00;
 
+const elv_r_inner: f64 = azi_r_outer + servo_shaft_h;
+const elv_r_outer: f64 = elv_r_inner + elv_r_margin;
+const elv_r_margin: f64 = 10.00;
+const elv_angle: f64 = 45.00;
+const elv_clearance: f64 = 1.00;
+
+
 /// Servo measurements
 const servo_shaft_h: f64 = 14.50;
 const servo_body_width: f64 = 22.50;
@@ -104,6 +111,7 @@ fn f64_to_string(arg: f64) -> String {
         result.push(digit_to_char(digit));
         f = (f - (digit as f64)) * 10.0;
     }
+    // println!("{}: {}", arg, result);
     result
 }
 
@@ -315,7 +323,7 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         cut_style(writer);
         let phi_rad = azi_angle*PI/180.;
         let t = azi_r_outer - azi_r_inner;
-        let l = (r*r + azi_r_outer*azi_r_outer - 2.*r*azi_r_outer*(PI - phi_rad).cos()).sqrt();
+        let l = (-r*r + azi_r_outer*azi_r_outer + 2.*r*azi_r_outer*(PI - phi_rad).cos()).sqrt();
         let l2 = (azi_r_inner*azi_r_inner - r*r).sqrt();
         let path = "M".to_string() + &f64str(offset.x) + "," +
             &f64str(offset.y) +
@@ -381,7 +389,12 @@ fn write_azimuth_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         writer.end_elem().unwrap();
     }
 
-    // TODO: slots for support struts
+    {
+        // TODO: slots for support struts
+        writer.begin_elem("path").unwrap();
+        cut_style(writer);
+        writer.end_elem().unwrap();
+    }
 }
 
 fn write_azimuthal_strut<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
@@ -485,6 +498,69 @@ fn write_azimuthal_bearing_mount<W: Write>(writer: &mut XmlWriter<W>, offset: Po
     }
 }
 
+fn write_elevator_arm<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
+    {
+        writer.begin_elem("path").unwrap();
+        cut_style(writer);
+        let phi_rad = elv_angle*PI/180.;
+        let h = rod_dia/2. + r_margin + raised_dia/2. + elv_clearance;
+        // let l = ((elv_r_inner*elv_r_inner) - (h*h) + (2.*h*elv_r_inner)*((PI - phi_rad).cos())).sqrt();
+        let l = -h*phi_rad.cos() + (-h*h*phi_rad.sin() + elv_r_inner*elv_r_inner).sqrt();
+        println!("{}: {}", elv_r_inner, ((l * phi_rad.sin())*(l * phi_rad.sin()) + (h + l*phi_rad.cos())*(h + l*phi_rad.cos())).sqrt());
+        let cornery = servo_thickness/2.;
+        let cornerx = (elv_r_inner*elv_r_inner - cornery*cornery).sqrt();
+        let path = "M".to_string() + &f64str(offset.x) + "," + &f64str(offset.y + h) +
+            " L" + &f64str(offset.x + l * phi_rad.sin()) + "," +
+                &f64str(offset.y + h + l * phi_rad.cos()) +
+            " A" + &f64str(elv_r_inner) + "," + &f64str(elv_r_inner) + ",0,0,0," +
+                &f64str(offset.x + cornerx) + "," + &f64str(offset.y + cornery) +
+            " L" + &f64str(offset.x + elv_r_inner) + "," + &f64str(offset.y + cornery) +
+            " L" + &f64str(offset.x + elv_r_inner) + "," +
+                &f64str(offset.y + cornery - servo_thickness/3.) +
+            " L" + &f64str(offset.x + elv_r_inner + thickness) + "," +
+                &f64str(offset.y + cornery - servo_thickness/3.) +
+            " L" + &f64str(offset.x + elv_r_inner + thickness) + "," +
+                &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
+            " L" + &f64str(offset.x + elv_r_inner) + "," +
+                &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
+            " L" + &f64str(offset.x + elv_r_inner) + "," +
+                &f64str(offset.y + cornery - servo_thickness) +
+            " L" + &f64str(offset.x + elv_r_outer) + "," +
+                &f64str(offset.y + cornery - servo_thickness) +
+            " L" + &f64str(offset.x + elv_r_outer) + "," + &f64str(offset.y) +
+            " A" + &f64str(elv_r_outer) + "," + &f64str(elv_r_outer) + ",1,0,1," +
+                &f64str(offset.x - elv_r_outer) + "," + &f64str(offset.y) +
+            " L" + &f64str(offset.x - elv_r_outer) + "," +
+                &f64str(offset.y + cornery - servo_thickness) +
+            " L" + &f64str(offset.x - elv_r_inner) + "," +
+                &f64str(offset.y + cornery - servo_thickness) +
+            " L" + &f64str(offset.x - elv_r_inner) + "," +
+                &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
+            " L" + &f64str(offset.x - elv_r_inner - thickness) + "," +
+                &f64str(offset.y + cornery - 2.*servo_thickness/3.) +
+            " L" + &f64str(offset.x - elv_r_inner - thickness) + "," +
+                &f64str(offset.y + cornery - servo_thickness/3.) +
+            " L" + &f64str(offset.x - elv_r_inner) + "," +
+                &f64str(offset.y + cornery - servo_thickness/3.) +
+            " L" + &f64str(offset.x - elv_r_inner) + "," + &f64str(offset.y + cornery) +
+            " A" + &f64str(elv_r_inner) + "," + &f64str(elv_r_inner) + ",0,0,0," +
+                &f64str(offset.x - l * phi_rad.sin()) + "," +
+                &f64str(offset.y + h + l * phi_rad.cos()) +
+            " Z";
+        writer.attr("d", &path).unwrap();
+        writer.end_elem().unwrap();
+    }
+
+    {
+        // TODO: slots for support struts
+        writer.begin_elem("path").unwrap();
+        cut_style(writer);
+        writer.end_elem().unwrap();
+    }
+
+
+}
+
 fn main() {
     println!("Running gimbal design generator!");
     let mut out = File::create("test.svg").unwrap();
@@ -502,5 +578,6 @@ fn main() {
         write_azimuthal_strut(xmlout, pt(width * in_to_mm/2.0 + 60.0, base_height + 200.0));
         write_azimuthal_servo_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 150.0));
         write_azimuthal_bearing_mount(xmlout, pt(width * in_to_mm/2.0, base_height + 200.0));
+        write_elevator_arm(xmlout, pt(width * in_to_mm/2.0, base_height + 350.0));
     });
 }
