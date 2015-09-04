@@ -52,13 +52,13 @@ const elv_drop: f64 = 5.00;
 
 
 /// Servo measurements
-const servo_shaft_h: f64 = 14.50;
-const servo_body_width: f64 = 22.50;
+const servo_shaft_h: f64 = 17.50; // 14.50;
+const servo_body_width: f64 = 29.50; // 22.50;
 const servo_arm_len: f64 = 16.50;
-const shaft_to_edge: f64 = 5.50;
-const flange_to_end: f64 = 21.00;
+const shaft_to_edge: f64 = 9.50; // 5.50;
+const flange_to_end: f64 = 20.00; // 21.00;
 const flange_len: f64 = 5.00;
-const servo_thickness: f64 = 11.00;
+const servo_thickness: f64 = 11.50; // 11.00;
 
 #[derive(Clone)]
 struct Point {
@@ -223,6 +223,7 @@ fn write_base<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
     let tab_width = rod_dia + 2.*r_margin - 2.*tab_margin;
     // Inner outline; fuck it, let's draw a rectange and a circle
     {
+        /*
         writer.begin_elem("rect").unwrap();
         cut_style(writer);
         writer.attr("x", &f64str(offset.x - 0.5*tab_width)).unwrap();
@@ -230,6 +231,7 @@ fn write_base<W: Write>(writer: &mut XmlWriter<W>, offset: Point) {
         writer.attr("width", &f64str(tab_width)).unwrap();
         writer.attr("height", &f64str(raised_dia + 2.*r_margin + 2.*thickness)).unwrap();
         writer.end_elem().unwrap();
+        */
 
         writer.begin_elem("circle").unwrap();
         cut_style(writer);
