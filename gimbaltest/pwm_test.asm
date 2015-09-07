@@ -30,6 +30,10 @@ pwm_a_reg equ P1OUT
 pwm_b equ 0x80
 pwm_b_reg equ P1OUT
 
+mid equ 1395
+down equ 1628
+up equ 1162
+
   ; allocate space for variables here
   org 0x0200
 a_count: 
@@ -42,11 +46,6 @@ start:
   mov.w #0x0280, sp
   ; turn off the watchdog timer
   mov.w #WDTPW|WDTHOLD, &WDTCTL
-
-  ;; Set MCLK to 16 MHz with DCO 
-  ;mov.b #(DCO_4), &DCOCTL
-  ;mov.b #RSEL_15, &BCSCTL1
-  ;mov.b #0, &BCSCTL2
 
   clr.b &DCOCTL
   mov.b &CALBC1_16MHZ, &BCSCTL1
@@ -85,10 +84,8 @@ new_uart_conf:
 no_uart_conf:
 uart_conf_end:
 
-  ; set up the transmit interrupt
-  ;bis.b #UCA0RXIE, &IE2
+  ; set up the receive interrupt
   bis.b #UCA0RXIE, &IE2
-  mov.b #'A', &UCA0TXBUF
   ; turn interrupts back on
   eint
 
@@ -130,6 +127,39 @@ uart_rcv_L0:
   bit.b #UCA0TXIFG, &IFG2
   jz uart_rcv_L0
   mov.b r4, &UCA0TXBUF
+  cmp.b #'w', r4
+  jne uart_rcv_noup
+
+uart_rcv_up:
+  mov.w #up, &a_count
+  mov.w #mid, &b_count
+uart_rcv_noup:
+  cmp.b #'s', r4
+  jne uart_rcv_nodown
+
+uart_rcv_down:
+  mov.w #down, &a_count
+  mov.w #mid, &b_count
+uart_rcv_nodown:
+  cmp.b #'a', r4
+  jne uart_rcv_noleft
+
+uart_rcv_left:
+  mov.w #mid, &a_count
+  mov.w #up, &b_count
+uart_rcv_noleft:
+  cmp.b #'d', r4
+  jne uart_rcv_noright
+
+uart_rcv_right:
+  mov.w #mid, &a_count
+  mov.w #down, &b_count
+uart_rcv_noright:
+  cmp.b #' ', r4
+  jne uart_rcv_nospace
+  mov.w #mid, &a_count
+  mov.w #mid, &b_count
+uart_rcv_nospace:
   pop r4
   reti
 
