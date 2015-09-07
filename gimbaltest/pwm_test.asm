@@ -30,8 +30,12 @@ pwm_a_reg equ P1OUT
 pwm_b equ 0x80
 pwm_b_reg equ P1OUT
 
-  org 0x2000
   ; allocate space for variables here
+  org 0x0200
+a_count: 
+  dw 1395
+b_count:
+  dw 1302
 
   org 0xf800
 start:
@@ -80,103 +84,44 @@ new_uart_conf:
   bic.b #UCSWRST, &UCA0CTL1
 no_uart_conf:
 uart_conf_end:
-  jmp new_timer_conf
-
-old_timer_conf:
-  ; set up timer
-  mov.w #TASSEL_2|ID_3|MC_1|TAIE, &TA0CTL ; 8x clock divider, 2 MHz tick rate
-  mov.w #CCIE, &TA0CCTL0 ; 8x clock divider, 2 MHz tick rate
-  mov.w #CM_0|CCIE, &TA0CCTL1
-  mov.w #3000, &TA0CCR1 ; 1.5 ms * 2 MHz = 3000
-  mov.w #CM_0|CCIE, &TA0CCTL2
-  ; mov.w #2400, &TA0CCR2 ; 1.2 ms * 2 MHz = 2400
-  mov.w #2900, &TA0CCR2 ; 1.2 ms * 2 MHz = 2400
-
-  ; start the timer
-  mov.w #40000, &TA0CCR0  ; 20 ms * 2 MHz = 40000
-  jmp timer_conf_end
-
-new_timer_conf:
-  mov.w #TASSEL_2|ID_3|MC_1|TAIE, &TA1CTL ; 8x clock divider, 2 MHz tick rate
-  mov.w #CCIE, &TA1CCTL0 ; 8x clock divider, 2 MHz tick rate
-  mov.w #CM_0|CCIE, &TA1CCTL1
-  mov.w #3000, &TA1CCR1 ; 1.5 ms * 2 MHz = 3000
-  mov.w #CM_0|CCIE, &TA1CCTL2
-  ; mov.w #2400, &TA1CCR2 ; 1.2 ms * 2 MHz = 2400
-  mov.w #2900, &TA1CCR2 ; 1.45 ms * 2 MHz = 2900
-
-  ; start the timer
-  mov.w #40000, &TA1CCR0  ; 20 ms * 2 MHz = 40000
-no_timer_conf:
-timer_conf_end:
 
   ; set up the transmit interrupt
   ;bis.b #UCA0RXIE, &IE2
   bis.b #UCA0RXIE, &IE2
   mov.b #'A', &UCA0TXBUF
-
   ; turn interrupts back on
   eint
-  ; TODO: set the MCU to sleep instead of infinite looping
 
-  jmp repeat
-  ; send a bunch of A's
+  clr.w r4
+main: ; 20 clock cycle, so each loop increments r4 in 20/16 MHz = 1.25us
+      ; well, it should be. It's a little off. 16000 loops take 17.2ms,
+      ; so each loop takes 17.2ms/16000 = 1.075 us
+  mov.w r4, r5 ; +1
+  mov.w r5, r4 ; +1
+  add.w #1, r4 ; +3
+  cmp.w &a_count, r4 ; +3
+  jne skip_a ; +2
 
-  mov #'A', r7
-  mov.b r7, &UCA0TXBUF
+low_a:
+  bic.b #pwm_a, &pwm_a_reg
+skip_a:
 
-main:
-  bit.b #UCA0TXIFG, &IFG2
-  jz main
-  mov.b r7, &UCA0TXBUF
-  inc r7
+  cmp.w &b_count, r4 ; +3
+  jne skip_b ; +2
+
+low_b:
+  bic.b #pwm_b, &pwm_b_reg
+skip_b:
+
+  ;cmp.w #16000, r4 ; +3 ; 20ms/1.25us = 16000. 
+  cmp.w #18605, r4 ; +3 ; 20ms/1.075us = 18605. 
+  jl main ; +2
+
+pwm_high:
+  clr.w r4
+  bis.b #pwm_a, &pwm_a_reg
+  bis.b #pwm_b, &pwm_b_reg
   jmp main
-
-
-  mov.b #'A', r4
-repeat:
-  jmp repeat
-
-timer: ; 6 clocks to enter the interrupt
-  bis.b #pwm_a, &pwm_a_reg
-  bis.b #pwm_b, &pwm_b_reg
-  reti ; +5
-
-timer2: ; 6 clocks to enter the interrupt
-  mov.w &TA0CCTL1, r4
-  and.w #CCIFG, r4
-  jz timer2_L0
-  bic.w #CCIFG, &TA0CCTL1
-  bic.b #pwm_a, &pwm_a_reg
-timer2_L0:
-  mov.w &TA0CCTL2, r4
-  and.w #CCIFG, r4
-  jz timer2_L1
-  bic.w #CCIFG, &TA0CCTL2
-  bic.b #pwm_b, &pwm_b_reg
-timer2_L1:
-  reti ; + 5
-
-timer_2: ; 6 clocks to enter the interrupt
-  bis.b #pwm_a, &pwm_a_reg
-  bis.b #pwm_b, &pwm_b_reg
-  reti ; +5
-
-timer2_2: ; 6 clocks to enter the interrupt
-  mov.w &TA1CCTL1, r4
-  and.w #CCIFG, r4
-  jz timer2_2_L0
-  bic.w #CCIFG, &TA1CCTL1
-  bic.b #pwm_a, &pwm_a_reg
-timer2_2_L0:
-  mov.w &TA1CCTL2, r4
-  and.w #CCIFG, r4
-  jz timer2_2_L1
-  bic.w #CCIFG, &TA1CCTL2
-  bic.b #pwm_b, &pwm_b_reg
-timer2_2_L1:
-  reti ; + 5
-
 
 uart_rcv:
   push r4
@@ -197,11 +142,11 @@ vectors:
   dw 0
   dw uart_send
   dw uart_rcv
-  dw timer2                 ; Timer0_A3: TA0CCR2, TA0CCR1
-  dw timer                  ; Timer0_A3: TA0CCR0
   dw 0
   dw 0
-  dw timer2_2
-  dw timer_2
+  dw 0
+  dw 0
+  dw 0
+  dw 0
   dw 0
   dw start                 ; Reset
